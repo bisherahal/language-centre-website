@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Details - Hexagon Centre</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary: #002395; --accent: #ED2939; }
+    body { font-family: 'Inter', 'Noto Sans Arabic', sans-serif; }
+    html[dir="rtl"] body { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
+    .lang-en { display: block; }
+    .lang-ar { display: none; }
+    html[dir="rtl"] .lang-en { display: none; }
+    html[dir="rtl"] .lang-ar { display: block; }
+    .tricolor-bar { display:flex; height:5px; border-radius:0; overflow:hidden; }
+    .tricolor-bar span:nth-child(1){flex:1;background:#002395}
+    .tricolor-bar span:nth-child(2){flex:1;background:#fff;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+    .tricolor-bar span:nth-child(3){flex:1;background:#ED2939}
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 border-b border-gray-100 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="hex.jfif" class="w-9 h-9 rounded-xl object-cover" alt="Hexagon Centre" />
+        <span class="font-bold text-gray-900 text-base hidden sm:block">
+          <span class="lang-en">Hexagon Centre</span>
+          <span class="lang-ar">مركز إكزاكون</span>
+        </span>
+      </a>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleLang()" class="text-sm font-semibold px-3 py-1.5 rounded-lg border border-[#002395]/30 text-[#002395] hover:bg-[#002395]/5 transition-colors">
+          <span class="lang-en">عربي</span>
+          <span class="lang-ar">English</span>
+        </button>
+        <a href="index.html" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#002395] transition-colors font-medium">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span class="lang-en">All Courses</span>
+          <span class="lang-ar">كل الدورات</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <div class="tricolor-bar fixed top-[61px] left-0 right-0 z-40"><span></span><span></span><span></span></div>
+
+  <!-- CONTENT -->
+  <div class="pt-20 pb-16 px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Loading state -->
+      <div id="course-loading" class="text-center py-20 text-gray-400">
+        <div class="text-4xl mb-4">⏳</div>
+        <p class="lang-en">Loading course...</p>
+        <p class="lang-ar">جارٍ التحميل...</p>
+      </div>
+
+      <!-- Not found -->
+      <div id="course-not-found" class="hidden text-center py-20">
+        <div class="text-4xl mb-4">😕</div>
+        <p class="font-bold text-gray-700 text-lg lang-en">Course not found</p>
+        <p class="font-bold text-gray-700 text-lg lang-ar">الدورة غير موجودة</p>
+        <a href="index.html" class="mt-4 inline-block text-[#002395] underline lang-en">Back to all courses</a>
+        <a href="index.html" class="mt-4 inline-block text-[#002395] underline lang-ar">العودة لجميع الدورات</a>
+      </div>
+
+      <!-- Course content (hidden until loaded) -->
+      <div id="course-content" class="hidden">
+
+        <!-- Hero -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+          <div class="flex items-start gap-4">
+            <div id="course-flag" class="text-5xl shrink-0 mt-1"></div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h1 id="course-name" class="text-2xl font-extrabold text-gray-900"></h1>
+                <span id="course-popular" class="hidden bg-yellow-400 text-yellow-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                  <span class="lang-en">Popular</span><span class="lang-ar">الأكثر طلباً</span>
+                </span>
+              </div>
+              <p id="course-subtitle" class="hidden text-sm font-semibold text-[#002395] mt-0.5"></p>
+              <p id="course-desc" class="text-gray-500 text-sm leading-relaxed mt-2"></p>
+            </div>
+          </div>
+
+          <!-- Spots bar -->
+          <div id="spots-section" class="mt-5 pt-5 border-t border-gray-100 hidden">
+            <div class="flex items-center gap-3">
+              <div class="flex-1 bg-gray-100 rounded-full h-2.5">
+                <div id="spots-bar" class="h-2.5 rounded-full transition-all" style="width:0%"></div>
+              </div>
+              <span id="spots-text" class="text-sm font-bold whitespace-nowrap"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+
+          <!-- LEFT: Teacher + Levels + Schedule -->
+          <div class="flex flex-col gap-5">
+
+            <!-- Teacher -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                <span class="lang-en">Your Teacher</span><span class="lang-ar">معلمك</span>
+              </h3>
+              <div class="flex items-center gap-4">
+                <div id="teacher-avatar" class="w-14 h-14 rounded-full flex items-center justify-center text-white text-lg font-bold shrink-0"></div>
+                <div>
+                  <div id="teacher-name" class="font-bold text-gray-900 text-base"></div>
+                  <div id="teacher-exp" class="text-gray-400 text-sm mt-0.5"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Levels -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                <span class="lang-en">Available Levels</span><span class="lang-ar">المستويات المتاحة</span>
+              </h3>
+              <div id="levels-list" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Upcoming Sessions -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+                <span class="lang-en">Upcoming Sessions</span><span class="lang-ar">الجلسات القادمة</span>
+              </h3>
+              <div id="sessions-list">
+                <p class="text-gray-400 text-sm lang-en">Loading sessions...</p>
+                <p class="text-gray-400 text-sm lang-ar">جارٍ تحميل الجلسات...</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Enrollment Form -->
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 self-start sticky top-20">
+            <h2 class="text-lg font-bold text-gray-900 mb-1">
+              <span class="lang-en">Enroll Now</span><span class="lang-ar">سجّل الآن</span>
+            </h2>
+            <p class="text-gray-400 text-sm mb-5">
+              <span class="lang-en">Fill in your details and we'll confirm within 1 hour.</span>
+              <span class="lang-ar">أدخل بياناتك وسنؤكد خلال ساعة.</span>
+            </p>
+
+            <!-- Form -->
+            <div id="enroll-form" class="space-y-3">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="lang-en">Full Name *</span><span class="lang-ar">الاسم الكامل *</span>
+                </label>
+                <input id="enroll-name" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors" placeholder="Ahmad Khalil / أحمد خليل" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="lang-en">Phone Number *</span><span class="lang-ar">رقم الهاتف *</span>
+                </label>
+                <input id="enroll-phone" type="tel" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors" placeholder="+962 7X XXX XXXX" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="lang-en">Email (optional)</span><span class="lang-ar">البريد الإلكتروني (اختياري)</span>
+                </label>
+                <input id="enroll-email" type="email" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors" placeholder="ahmad@gmail.com" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="lang-en">Level</span><span class="lang-ar">المستوى</span>
+                </label>
+                <select id="enroll-level" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors bg-white"></select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="lang-en">Preferred Schedule</span><span class="lang-ar">الجدول المفضل</span>
+                </label>
+                <select id="enroll-schedule" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors bg-white">
+                  <option value="Morning (8am–12pm)">Morning / صباحي (8am–12pm)</option>
+                  <option value="Evening (4pm–8pm)">Evening / مسائي (4pm–8pm)</option>
+                  <option value="Weekend - Saturday">Weekend / عطلة (Saturday)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                  <span class="lang-en">Notes (optional)</span><span class="lang-ar">ملاحظات (اختياري)</span>
+                </label>
+                <textarea id="enroll-notes" rows="2" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors resize-none" placeholder="Any questions or special requests..."></textarea>
+              </div>
+              <button id="enroll-submit-btn" onclick="submitEnrollment()"
+                class="w-full flex items-center justify-center gap-2 text-white font-bold py-3 rounded-xl transition-colors text-sm disabled:opacity-60"
+                style="background:#002395" onmouseover="if(!this.disabled)this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
+                <span class="lang-en">Submit Registration</span>
+                <span class="lang-ar">إرسال التسجيل</span>
+              </button>
+            </div>
+
+            <!-- Success -->
+            <div id="enroll-success" class="hidden text-center py-6">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold text-gray-900 mb-2">
+                <span class="lang-en">Registration Received!</span>
+                <span class="lang-ar">تم استلام طلبك!</span>
+              </h4>
+              <p class="text-gray-500 text-sm mb-5">
+                <span class="lang-en">We'll contact you within 1 hour to confirm your spot.</span>
+                <span class="lang-ar">سنتواصل معك خلال ساعة لتأكيد مكانك.</span>
+              </p>
+              <a href="index.html" class="inline-block px-6 py-2.5 rounded-xl text-white text-sm font-bold transition-colors" style="background:#002395">
+                <span class="lang-en">Back to Courses</span><span class="lang-ar">العودة للدورات</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="courses.js"></script>
+  <script>
+    const WHATSAPP_NUMBER_LOCAL = "962796831961";
+    let currentCourse = null;
+
+    function toggleLang() {
+      const html = document.getElementById('html-root');
+      const isRTL = html.getAttribute('dir') === 'rtl';
+      html.setAttribute('dir', isRTL ? 'ltr' : 'rtl');
+      html.setAttribute('lang', isRTL ? 'en' : 'ar');
+      if (currentCourse) renderCourse(currentCourse);
+    }
+
+    function renderCourse(course) {
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      document.title = (isRTL ? course.nameAr : course.nameEn) + ' - Hexagon Centre';
+
+      document.getElementById('course-flag').textContent = course.flag;
+      document.getElementById('course-name').textContent = isRTL ? course.nameAr : course.nameEn;
+
+      const subtitleEl = document.getElementById('course-subtitle');
+      const subtitle = isRTL ? (course.subtitleAr || '') : (course.subtitleEn || '');
+      subtitleEl.textContent = subtitle;
+      subtitleEl.classList.toggle('hidden', !subtitle);
+
+      document.getElementById('course-desc').textContent = isRTL ? course.descAr : course.descEn;
+
+      if (course.popular) document.getElementById('course-popular').classList.remove('hidden');
+
+      // Teacher
+      const av = document.getElementById('teacher-avatar');
+      av.textContent = course.teacher.initials;
+      av.style.background = course.teacher.avatarColor;
+      document.getElementById('teacher-name').textContent = isRTL ? course.teacher.nameAr : course.teacher.nameEn;
+      document.getElementById('teacher-exp').textContent = isRTL ? course.teacher.expAr : course.teacher.expEn;
+
+      // Levels
+      const levels = isRTL ? course.levelsAr : course.levels;
+      document.getElementById('levels-list').innerHTML = levels.map(l =>
+        `<span class="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full">${l}</span>`
+      ).join('');
+
+      document.getElementById('enroll-level').innerHTML = levels.map(l =>
+        `<option value="${l}">${l}</option>`
+      ).join('');
+
+      // Spots
+      if (course.totalSpots !== null && course.totalSpots !== undefined) {
+        const available = course.totalSpots - course.takenSpots;
+        const pct = Math.round((course.takenSpots / course.totalSpots) * 100);
+        const color = available <= 2 ? '#ED2939' : available <= 4 ? '#f59e0b' : '#16a34a';
+        document.getElementById('spots-bar').style.width = pct + '%';
+        document.getElementById('spots-bar').style.background = color;
+        document.getElementById('spots-text').style.color = color;
+        document.getElementById('spots-text').innerHTML = isRTL
+          ? `${available} من ${course.totalSpots} أماكن متبقية${available <= 2 ? ' — يكاد يمتلئ!' : ''}`
+          : `${available} of ${course.totalSpots} spots left${available <= 2 ? ' — Almost full!' : ''}`;
+        document.getElementById('spots-section').classList.remove('hidden');
+      }
+    }
+
+    async function loadSessions(course) {
+      const container = document.getElementById('sessions-list');
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      const locale = isRTL ? 'ar-JO' : 'en-GB';
+
+      if (GOOGLE_CALENDAR_ID.startsWith('[') || GOOGLE_CALENDAR_API_KEY.startsWith('[')) {
+        container.innerHTML = `<p class="text-gray-400 text-sm"><span class="lang-en">Schedule not set up yet.</span><span class="lang-ar">الجدول غير متاح بعد.</span></p>`;
+        return;
+      }
+
+      try {
+        const now = new Date().toISOString();
+        const future = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString();
+        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_ID)}/events?timeMin=${now}&timeMax=${future}&maxResults=50&singleEvents=true&orderBy=startTime&key=${GOOGLE_CALENDAR_API_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const events = (data.items || []).filter(ev =>
+          ev.summary && ev.summary.toLowerCase().includes(course.nameEn.toLowerCase())
+        );
+
+        if (events.length === 0) {
+          container.innerHTML = `<p class="text-gray-400 text-sm lang-en">No upcoming sessions found. <a href="https://wa.me/${WHATSAPP_NUMBER_LOCAL}" class="underline text-[#002395]" target="_blank">Contact us</a> for availability.</p>
+          <p class="text-gray-400 text-sm lang-ar">لا توجد جلسات قادمة. <a href="https://wa.me/${WHATSAPP_NUMBER_LOCAL}" class="underline text-[#002395]" target="_blank">تواصل معنا</a> لمعرفة المواعيد.</p>`;
+          return;
+        }
+
+        container.innerHTML = events.map(ev => {
+          const d = new Date(ev.start?.dateTime || ev.start?.date);
+          const dateStr = d.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+          const timeStr = ev.start?.dateTime ? d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : '';
+          let dur = '';
+          if (ev.start?.dateTime && ev.end?.dateTime) {
+            const mins = Math.round((new Date(ev.end.dateTime) - d) / 60000);
+            const hrs = Math.floor(mins / 60), rem = mins % 60;
+            dur = hrs > 0 ? `${hrs}h${rem > 0 ? ` ${rem}m` : ''}` : `${mins}m`;
+          }
+          return `<div class="flex items-center justify-between py-2.5 border-b border-gray-100 last:border-0">
+            <div>
+              <div class="text-sm font-medium text-gray-800">${dateStr}</div>
+              ${timeStr ? `<div class="text-xs text-gray-400">${timeStr}${dur ? ` · ${dur}` : ''}</div>` : ''}
+            </div>
+            <span class="text-xs bg-blue-50 text-blue-700 font-semibold px-2.5 py-1 rounded-full">📅</span>
+          </div>`;
+        }).join('');
+      } catch {
+        container.innerHTML = `<p class="text-gray-400 text-sm lang-en">Could not load sessions.</p><p class="text-gray-400 text-sm lang-ar">تعذّر تحميل الجلسات.</p>`;
+      }
+    }
+
+    function submitEnrollment() {
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      const name  = document.getElementById('enroll-name').value.trim();
+      const phone = document.getElementById('enroll-phone').value.trim();
+      if (!name || !phone) {
+        alert(isRTL ? 'يرجى إدخال الاسم ورقم الهاتف' : 'Please enter your name and phone number.');
+        return;
+      }
+      const btn = document.getElementById('enroll-submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="lang-en">Sending…</span><span class="lang-ar">جارٍ الإرسال…</span>`;
+
+      const course = currentCourse;
+      const payload = {
+        name, phone,
+        email: document.getElementById('enroll-email').value.trim(),
+        course: course.nameEn,
+        courseId: course.id || course.nameEn,
+        subtitle: course.subtitleEn || '',
+        level: document.getElementById('enroll-level').value,
+        schedule: document.getElementById('enroll-schedule').value,
+        notes: document.getElementById('enroll-notes').value.trim(),
+        date: new Date().toISOString(),
+        lang: isRTL ? 'ar' : 'en'
+      };
+
+      if (!GOOGLE_SCRIPT_URL.startsWith('[')) {
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(() => {});
+      }
+
+      document.getElementById('enroll-form').classList.add('hidden');
+      document.getElementById('enroll-success').classList.remove('hidden');
+    }
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (!id) {
+        document.getElementById('course-loading').classList.add('hidden');
+        document.getElementById('course-not-found').classList.remove('hidden');
+        return;
+      }
+
+      const course = courses.find(c => c.id === id);
+      if (!course) {
+        document.getElementById('course-loading').classList.add('hidden');
+        document.getElementById('course-not-found').classList.remove('hidden');
+        return;
+      }
+
+      currentCourse = course;
+
+      // Fetch real spot counts first
+      if (!GOOGLE_SCRIPT_URL.startsWith('[')) {
+        try {
+          const res = await fetch(GOOGLE_SCRIPT_URL);
+          const spots = await res.json();
+          if (Array.isArray(spots)) {
+            spots.forEach(({ id: sid, taken, total }) => {
+              const c = courses.find(c => (c.id || c.nameEn.toLowerCase()) === sid.toLowerCase());
+              if (c) { c.takenSpots = parseInt(taken, 10); c.totalSpots = parseInt(total, 10); }
+            });
+          }
+        } catch {}
+      }
+
+      renderCourse(course);
+      document.getElementById('course-loading').classList.add('hidden');
+      document.getElementById('course-content').classList.remove('hidden');
+
+      loadSessions(course);
+    }
+
+    init();
+  </script>
+</body>
+</html>
