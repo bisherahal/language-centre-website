@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course - Hexagon Centre</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', 'Noto Sans Arabic', sans-serif; }
+    html[dir="rtl"] body { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
+    .lang-en { display: block; }
+    .lang-ar { display: none; }
+    html[dir="rtl"] .lang-en { display: none; }
+    html[dir="rtl"] .lang-ar { display: block; }
+    .gradient-hero { background: linear-gradient(135deg, #001a6e 0%, #002395 60%, #0a2fa8 100%); }
+    .tricolor-bar { display:flex; height:5px; overflow:hidden; }
+    .tricolor-bar span:nth-child(1){flex:1;background:#002395}
+    .tricolor-bar span:nth-child(2){flex:1;background:#fff;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+    .tricolor-bar span:nth-child(3){flex:1;background:#ED2939}
+    .class-card { transition: transform 0.15s, box-shadow 0.15s; }
+    .class-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 border-b border-gray-100 shadow-sm">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3">
+        <img src="hex.jfif" class="w-9 h-9 rounded-xl object-cover" alt="Hexagon Centre" />
+        <span class="font-bold text-gray-900 text-base hidden sm:block lang-en">Hexagon Centre</span>
+        <span class="font-bold text-gray-900 text-base hidden sm:block lang-ar">مركز إكزاكون</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleLang()" class="text-sm font-semibold px-3 py-1.5 rounded-lg border border-[#002395]/30 text-[#002395] hover:bg-[#002395]/5 transition-colors">
+          <span class="lang-en">عربي</span><span class="lang-ar">English</span>
+        </button>
+        <a href="index.html" class="flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#002395] font-medium transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <span class="lang-en">All Courses</span><span class="lang-ar">كل الدورات</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <div class="tricolor-bar fixed top-[61px] left-0 right-0 z-40"><span></span><span></span><span></span></div>
+
+  <!-- COURSE HERO -->
+  <div id="course-hero" class="gradient-hero pt-24 pb-10 px-4 text-white">
+    <div class="max-w-5xl mx-auto">
+      <div id="hero-loading" class="py-10 text-blue-200 text-sm">Loading...</div>
+      <div id="hero-content" class="hidden">
+        <div class="flex items-start gap-5">
+          <div id="hero-flag" class="shrink-0 mt-1"></div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 flex-wrap mb-1">
+              <h1 id="hero-name" class="text-3xl font-extrabold"></h1>
+              <span id="hero-popular" class="hidden bg-yellow-400 text-yellow-900 text-xs font-bold px-2.5 py-1 rounded-full">Popular</span>
+            </div>
+            <p id="hero-subtitle" class="hidden text-blue-200 text-sm font-semibold mb-2"></p>
+            <p id="hero-desc" class="text-blue-100 text-base leading-relaxed max-w-2xl"></p>
+          </div>
+        </div>
+        <!-- Teacher -->
+        <div id="hero-teacher" class="mt-6 inline-flex items-center gap-3 bg-white/10 rounded-2xl px-4 py-3">
+          <div id="teacher-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0"></div>
+          <div>
+            <div id="teacher-name" class="font-bold text-white text-sm"></div>
+            <div id="teacher-exp" class="text-blue-200 text-xs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="max-w-5xl mx-auto px-4 py-10">
+
+    <!-- Levels -->
+    <div id="levels-section" class="hidden mb-8">
+      <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
+        <span class="lang-en">Available Levels</span><span class="lang-ar">المستويات المتاحة</span>
+      </h2>
+      <div id="levels-list" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <!-- Upcoming Classes -->
+    <div>
+      <h2 class="text-xl font-extrabold text-gray-900 mb-1">
+        <span class="lang-en">Upcoming Classes</span><span class="lang-ar">الحصص القادمة</span>
+      </h2>
+      <p class="text-gray-400 text-sm mb-6">
+        <span class="lang-en">Pick a class and enroll — we'll confirm your spot within 1 hour.</span>
+        <span class="lang-ar">اختر حصة وسجّل — سنؤكد مكانك خلال ساعة.</span>
+      </p>
+      <div id="classes-list" class="flex flex-col gap-4">
+        <div class="text-gray-400 text-sm py-6 text-center lang-en">Loading classes...</div>
+        <div class="text-gray-400 text-sm py-6 text-center lang-ar">جارٍ تحميل الحصص...</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ENROLLMENT MODAL -->
+  <div id="enroll-modal" class="hidden fixed inset-0 z-[1000] items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+
+      <h3 id="modal-title" class="text-xl font-bold text-gray-900 mb-0.5"></h3>
+      <p id="modal-class-info" class="text-sm text-[#002395] font-semibold mb-4"></p>
+
+      <div id="modal-form" class="space-y-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Full Name *</span><span class="lang-ar">الاسم الكامل *</span>
+          </label>
+          <input id="enroll-name" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395]" placeholder="Ahmad Khalil / أحمد خليل" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Phone Number *</span><span class="lang-ar">رقم الهاتف *</span>
+          </label>
+          <input id="enroll-phone" type="tel" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395]" placeholder="+962 7X XXX XXXX" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Email (optional)</span><span class="lang-ar">البريد الإلكتروني (اختياري)</span>
+          </label>
+          <input id="enroll-email" type="email" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395]" placeholder="ahmad@gmail.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Level</span><span class="lang-ar">المستوى</span>
+          </label>
+          <select id="enroll-level" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] bg-white"></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Notes (optional)</span><span class="lang-ar">ملاحظات (اختياري)</span>
+          </label>
+          <textarea id="enroll-notes" rows="2" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] resize-none" placeholder="Any questions or requests..."></textarea>
+        </div>
+        <button id="enroll-submit-btn" onclick="submitEnrollment()"
+          class="w-full flex items-center justify-center gap-2 text-white font-bold py-3 rounded-xl text-sm disabled:opacity-60"
+          style="background:#002395">
+          <span class="lang-en">Submit Registration</span>
+          <span class="lang-ar">إرسال التسجيل</span>
+        </button>
+      </div>
+
+      <div id="modal-success" class="hidden text-center py-6">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h4 class="text-lg font-bold text-gray-900 mb-2">
+          <span class="lang-en">Registration Received!</span><span class="lang-ar">تم استلام طلبك!</span>
+        </h4>
+        <p class="text-gray-500 text-sm mb-5">
+          <span class="lang-en">We'll contact you within 1 hour to confirm your spot.</span>
+          <span class="lang-ar">سنتواصل معك خلال ساعة لتأكيد مكانك.</span>
+        </p>
+        <button onclick="closeModal()" class="px-6 py-2.5 rounded-xl text-white text-sm font-bold" style="background:#002395">
+          <span class="lang-en">Done</span><span class="lang-ar">تم</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="courses.js"></script>
+  <script>
+    let currentCourse = null;
+    let selectedClassInfo = "";
+    let _activeLevelFilter = 'all';
+
+    function toggleLang() {
+      const html = document.getElementById('html-root');
+      const isRTL = html.getAttribute('dir') === 'rtl';
+      html.setAttribute('dir', isRTL ? 'ltr' : 'rtl');
+      html.setAttribute('lang', isRTL ? 'en' : 'ar');
+      if (currentCourse) renderHero(currentCourse);
+    }
+
+    function renderHero(course) {
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      document.title = (isRTL ? course.nameAr : course.nameEn) + ' - Hexagon Centre';
+
+      const heroFlagEl = document.getElementById('hero-flag');
+      if (course.flagCode) {
+        heroFlagEl.innerHTML = `<img src="https://flagcdn.com/w160/${course.flagCode}.png" alt="${course.nameEn}" class="w-24 h-16 object-cover rounded-lg shadow-md" />`;
+      } else {
+        heroFlagEl.innerHTML = `<span class="text-6xl">${course.flag}</span>`;
+      }
+      document.getElementById('hero-name').textContent = isRTL ? course.nameAr : course.nameEn;
+
+      const sub = isRTL ? (course.subtitleAr||'') : (course.subtitleEn||'');
+      const subEl = document.getElementById('hero-subtitle');
+      subEl.textContent = sub;
+      subEl.classList.toggle('hidden', !sub);
+
+      document.getElementById('hero-desc').textContent = isRTL ? course.descAr : course.descEn;
+
+      if (course.popular) document.getElementById('hero-popular').classList.remove('hidden');
+
+      const av = document.getElementById('teacher-avatar');
+      av.textContent = course.teacher.initials;
+      av.style.background = course.teacher.avatarColor;
+      document.getElementById('teacher-name').textContent = isRTL ? course.teacher.nameAr : course.teacher.nameEn;
+      document.getElementById('teacher-exp').textContent = isRTL ? course.teacher.expAr : course.teacher.expEn;
+
+      // Levels — clickable filter buttons
+      const levels = isRTL ? course.levelsAr : course.levels;
+      document.getElementById('levels-list').innerHTML =
+        `<button data-level="all" onclick="filterByLevel('all')"
+           class="level-btn bg-[#002395] text-white text-xs font-semibold px-3 py-1.5 rounded-full border border-[#002395] transition-colors">
+           <span class="lang-en">All</span><span class="lang-ar">الكل</span>
+         </button>` +
+        levels.map((l, i) => {
+          const enLevel = course.levels[i] || l;
+          return `<button data-level="${enLevel.replace(/"/g,'&quot;')}" onclick="filterByLevel('${enLevel.replace(/'/g,"\\'")}')"
+                    class="level-btn bg-white text-[#002395] text-xs font-semibold px-3 py-1.5 rounded-full border border-[#002395]/20 hover:bg-[#002395]/5 transition-colors">${l}</button>`;
+        }).join('');
+      document.getElementById('levels-section').classList.remove('hidden');
+
+      // Level select in modal
+      document.getElementById('enroll-level').innerHTML = levels.map(l =>
+        `<option value="${l}">${l}</option>`
+      ).join('');
+    }
+
+    async function loadClasses(course) {
+      const container = document.getElementById('classes-list');
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      const locale = isRTL ? 'ar-JO' : 'en-GB';
+      const dayNamesEn = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+      const dayNamesAr = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+
+      if (GOOGLE_CALENDAR_ID.startsWith('[') || GOOGLE_CALENDAR_API_KEY.startsWith('[')) {
+        container.innerHTML = `<div class="bg-white rounded-2xl p-8 text-center border border-gray-100">
+          <p class="text-gray-400 text-sm lang-en">Schedule not set up yet. <a href="https://wa.me/${WHATSAPP_NUMBER}" class="text-[#002395] underline" target="_blank">Contact us</a> for available times.</p>
+          <p class="text-gray-400 text-sm lang-ar">الجدول غير متاح بعد. <a href="https://wa.me/${WHATSAPP_NUMBER}" class="text-[#002395] underline" target="_blank">تواصل معنا</a> لمعرفة المواعيد.</p>
+        </div>`;
+        return;
+      }
+
+      try {
+        const now = new Date().toISOString();
+        const future = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString();
+        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_ID)}/events?timeMin=${now}&timeMax=${future}&maxResults=50&singleEvents=true&orderBy=startTime&key=${GOOGLE_CALENDAR_API_KEY}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // Filter events for this course
+        const events = (data.items || []).filter(ev =>
+          ev.summary && ev.summary.toLowerCase().includes(course.nameEn.toLowerCase())
+        );
+
+        if (events.length === 0) {
+          container.innerHTML = `<div class="bg-white rounded-2xl p-8 text-center border border-gray-100">
+            <div class="text-4xl mb-3">📅</div>
+            <p class="font-semibold text-gray-700 lang-en">No upcoming classes scheduled yet</p>
+            <p class="font-semibold text-gray-700 lang-ar">لا توجد حصص قادمة بعد</p>
+            <p class="text-gray-400 text-sm mt-2 lang-en">Contact us on WhatsApp and we'll set up a class for you.</p>
+            <p class="text-gray-400 text-sm mt-2 lang-ar">تواصل معنا على واتساب وسنرتب لك حصة.</p>
+            <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank"
+               class="mt-4 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition-colors">
+              <span class="lang-en">WhatsApp Us</span><span class="lang-ar">واتساب</span>
+            </a>
+          </div>`;
+          return;
+        }
+
+        // Group by event title (each title = one recurring class group)
+        const groups = {};
+        events.forEach(ev => {
+          const key = ev.summary || 'Class';
+          if (!groups[key]) groups[key] = [];
+          groups[key].push(ev);
+        });
+
+        container.innerHTML = Object.entries(groups).map(([title, groupEvents]) => {
+          groupEvents.sort((a, b) =>
+            new Date(a.start?.dateTime || a.start?.date) - new Date(b.start?.dateTime || b.start?.date)
+          );
+
+          const next = groupEvents[0];
+          const nextStart = new Date(next.start?.dateTime || next.start?.date);
+          const nextDateStr = nextStart.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+          const nextTimeStr = next.start?.dateTime
+            ? nextStart.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }) : '';
+
+          let dur = '';
+          if (next.start?.dateTime && next.end?.dateTime) {
+            const mins = Math.round((new Date(next.end.dateTime) - nextStart) / 60000);
+            const hrs = Math.floor(mins / 60), rem = mins % 60;
+            dur = hrs > 0 ? `${hrs}h${rem > 0 ? ` ${rem}m` : ''}` : `${mins}m`;
+          }
+
+          const uniqueDays = [...new Set(groupEvents.map(e => new Date(e.start?.dateTime || e.start?.date).getDay()))].sort();
+          const daysEn = uniqueDays.map(d => dayNamesEn[d]).join(' · ');
+          const daysAr = uniqueDays.map(d => dayNamesAr[d]).join(' · ');
+
+          // Extract level/time from title e.g. "English - Beginner | Morning"
+          const levelMatch = title.match(/[-–]\s*([^|]+)/);
+          const level = levelMatch ? levelMatch[1].trim() : '';
+          const timeOfDayMatch = title.match(/\|\s*(.+)$/);
+          const timeOfDay = timeOfDayMatch ? timeOfDayMatch[1].trim() : '';
+
+          const classInfoStr = `${title}${nextTimeStr ? ' · ' + nextTimeStr : ''}`;
+
+          let spotsHTML = '';
+          if (currentCourse.totalSpots != null) {
+            const available = currentCourse.totalSpots - currentCourse.takenSpots;
+            const pct = Math.round((currentCourse.takenSpots / currentCourse.totalSpots) * 100);
+            const color = available <= 2 ? '#ED2939' : available <= 4 ? '#f59e0b' : '#16a34a';
+            const urgencyEn = available <= 2 ? ' — Almost full!' : '';
+            const urgencyAr = available <= 2 ? ' — يكاد يمتلئ!' : '';
+            spotsHTML = `<div class="flex items-center gap-2 mt-2">
+              <div class="flex-1 bg-gray-100 rounded-full h-1.5">
+                <div class="h-1.5 rounded-full" style="width:${pct}%;background:${color}"></div>
+              </div>
+              <span class="text-xs font-bold whitespace-nowrap" style="color:${color}">
+                <span class="lang-en">${available} of ${currentCourse.totalSpots} spots left${urgencyEn}</span>
+                <span class="lang-ar">${available} من ${currentCourse.totalSpots} أماكن${urgencyAr}</span>
+              </span>
+            </div>`;
+          }
+
+          const group = getLevelGroup(course.nameEn, level);
+          return `<div class="bg-white rounded-2xl border border-gray-100 p-5 class-card" data-level="${level.replace(/"/g,'&quot;')}" data-group="${group.replace(/"/g,'&quot;')}">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 flex-wrap mb-2">
+                  ${level ? `<span class="bg-[#002395]/10 text-[#002395] text-xs font-bold px-2.5 py-1 rounded-full">${level}</span>` : ''}
+                  ${timeOfDay ? `<span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">${timeOfDay}</span>` : ''}
+                </div>
+                <div class="flex flex-wrap gap-4 text-sm text-gray-600">
+                  <div class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-[#002395]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span class="lang-en font-medium">${nextDateStr}${nextTimeStr ? ' · ' + nextTimeStr : ''}</span>
+                    <span class="lang-ar font-medium">${nextDateStr}${nextTimeStr ? ' · ' + nextTimeStr : ''}</span>
+                  </div>
+                  ${daysEn ? `<div class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-[#ED2939]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="lang-en">${daysEn}</span>
+                    <span class="lang-ar">${daysAr}</span>
+                  </div>` : ''}
+                  ${dur ? `<div class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <span>${dur} / session</span>
+                  </div>` : ''}
+                  <div class="flex items-center gap-1.5 text-gray-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+                    <span class="lang-en">${groupEvents.length} sessions ahead</span>
+                    <span class="lang-ar">${groupEvents.length} جلسات قادمة</span>
+                  </div>
+                </div>
+              </div>
+              ${spotsHTML}
+              <button onclick="openModal('${title.replace(/'/g,"\\'")}', '${classInfoStr.replace(/'/g,"\\'")}')"
+                class="shrink-0 font-bold px-5 py-2.5 rounded-xl text-white text-sm transition-colors"
+                style="background:#002395" onmouseover="this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
+                <span class="lang-en">Enroll</span>
+                <span class="lang-ar">سجّل</span>
+              </button>
+            </div>
+
+            <!-- All upcoming dates (collapsed) -->
+            ${groupEvents.length > 1 ? `
+            <div class="mt-4 pt-4 border-t border-gray-50">
+              <div class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-2 lang-en">All upcoming sessions</div>
+              <div class="text-xs text-gray-400 font-semibold uppercase tracking-wide mb-2 lang-ar">جميع الجلسات القادمة</div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                ${groupEvents.map(ev => {
+                  const d = new Date(ev.start?.dateTime || ev.start?.date);
+                  const ds = d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+                  const ts = ev.start?.dateTime ? d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '';
+                  return `<div class="bg-gray-50 rounded-lg px-2.5 py-1.5 text-xs text-gray-600">${ds}${ts ? ' · ' + ts : ''}</div>`;
+                }).join('')}
+              </div>
+            </div>` : ''}
+          </div>`;
+        }).join('');
+
+      } catch {
+        container.innerHTML = `<div class="bg-white rounded-2xl p-8 text-center border border-gray-100">
+          <p class="text-gray-400 text-sm lang-en">Could not load schedule. <a href="https://wa.me/${WHATSAPP_NUMBER}" class="text-[#002395] underline" target="_blank">Contact us on WhatsApp</a>.</p>
+          <p class="text-gray-400 text-sm lang-ar">تعذّر تحميل الجدول. <a href="https://wa.me/${WHATSAPP_NUMBER}" class="text-[#002395] underline" target="_blank">تواصل معنا على واتساب</a>.</p>
+        </div>`;
+      }
+    }
+
+    // Maps a calendar event level (e.g. "A1/1", "DELF B2 Prep") to a filter group
+    function getLevelGroup(courseNameEn, level) {
+      if (courseNameEn !== 'French') return level; // English: exact match
+      const l = level.toLowerCase();
+      if (l.includes('kids')) return 'Kids (5-15 yrs)';
+      if (l.includes('delf') || l.includes('dalf') || l.includes('scolaire')) return 'DELF';
+      if (l.includes('peacekeeping') || l.includes('police')) return 'Peacekeeping (French)';
+      return 'French'; // A1/x, A2/x, B1/x, B2/x, Conversation, etc.
+    }
+
+    function filterByLevel(level) {
+      _activeLevelFilter = level;
+      document.querySelectorAll('.level-btn').forEach(btn => {
+        const active = btn.dataset.level === level;
+        btn.classList.toggle('bg-[#002395]', active);
+        btn.classList.toggle('text-white', active);
+        btn.classList.toggle('bg-white', !active);
+        btn.classList.toggle('text-[#002395]', !active);
+        btn.classList.toggle('border-[#002395]', active);
+        btn.classList.toggle('border-[#002395]/20', !active);
+      });
+      document.querySelectorAll('#classes-list > div[data-group]').forEach(card => {
+        card.style.display = (level === 'all' || card.dataset.group === level) ? '' : 'none';
+      });
+    }
+
+    function openModal(classTitle, classInfo) {
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      selectedClassInfo = classInfo;
+      document.getElementById('modal-title').textContent = isRTL
+        ? `التسجيل في ${currentCourse.nameAr}` : `Enroll in ${currentCourse.nameEn}`;
+      document.getElementById('modal-class-info').textContent = classInfo;
+      document.getElementById('modal-form').classList.remove('hidden');
+      document.getElementById('modal-success').classList.add('hidden');
+      const btn = document.getElementById('enroll-submit-btn');
+      btn.disabled = false;
+      btn.innerHTML = `<span class="lang-en">Submit Registration</span><span class="lang-ar">إرسال التسجيل</span>`;
+      ['enroll-name','enroll-phone','enroll-email','enroll-notes'].forEach(id => document.getElementById(id).value = '');
+      const modal = document.getElementById('enroll-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('enroll-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function submitEnrollment() {
+      const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
+      const name  = document.getElementById('enroll-name').value.trim();
+      const phone = document.getElementById('enroll-phone').value.trim();
+      if (!name || !phone) {
+        alert(isRTL ? 'يرجى إدخال الاسم ورقم الهاتف' : 'Please enter your name and phone number.');
+        return;
+      }
+      const btn = document.getElementById('enroll-submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="lang-en">Sending…</span><span class="lang-ar">جارٍ الإرسال…</span>`;
+
+      const payload = {
+        name, phone,
+        email: document.getElementById('enroll-email').value.trim(),
+        course: currentCourse.nameEn,
+        courseId: currentCourse.id || currentCourse.nameEn,
+        subtitle: selectedClassInfo,
+        level: document.getElementById('enroll-level').value,
+        schedule: selectedClassInfo,
+        notes: document.getElementById('enroll-notes').value.trim(),
+        date: new Date().toISOString(),
+        lang: isRTL ? 'ar' : 'en'
+      };
+
+      if (!GOOGLE_SCRIPT_URL.startsWith('[')) {
+        fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).catch(() => {});
+      }
+
+      document.getElementById('modal-form').classList.add('hidden');
+      document.getElementById('modal-success').classList.remove('hidden');
+    }
+
+    async function init() {
+      const id = new URLSearchParams(window.location.search).get('id');
+      const course = courses.find(c => c.id === id);
+
+      if (!course) {
+        document.getElementById('hero-loading').textContent = 'Course not found.';
+        return;
+      }
+
+      currentCourse = course;
+
+      // Fetch spot counts
+      if (!GOOGLE_SCRIPT_URL.startsWith('[')) {
+        try {
+          const res = await fetch(GOOGLE_SCRIPT_URL);
+          const spots = await res.json();
+          if (Array.isArray(spots)) {
+            spots.forEach(({ id: sid, taken, total }) => {
+              const c = courses.find(c => (c.id||c.nameEn.toLowerCase()) === sid.toLowerCase());
+              if (c) { c.takenSpots = parseInt(taken,10); c.totalSpots = parseInt(total,10); }
+            });
+          }
+        } catch {}
+      }
+
+      document.getElementById('hero-loading').classList.add('hidden');
+      document.getElementById('hero-content').classList.remove('hidden');
+      renderHero(course);
+      loadClasses(course);
+    }
+
+    document.getElementById('enroll-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    init();
+  </script>
+</body>
+</html>
