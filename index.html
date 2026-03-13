@@ -127,23 +127,37 @@
           <span class="lang-en">Professional language courses and certified translation services in Amman. Flexible schedules for all levels.</span>
           <span class="lang-ar">دورات لغوية احترافية وخدمات ترجمة معتمدة في عمّان. جداول مرنة لجميع المستويات.</span>
         </p>
-        <p class="text-white/60 text-base mb-8 font-medium tracking-wide" id="greeting-line" aria-live="polite"></p>
+        <div class="flex items-center gap-3 mb-8">
+          <span class="text-white/50 text-sm uppercase tracking-widest font-semibold">We speak</span>
+          <span id="greeting-line" aria-live="polite"
+                class="text-2xl font-bold text-white tracking-wide"
+                style="transition:opacity 0.5s;opacity:1;"></span>
+        </div>
         <script>
-          const _greetings = ["Hello 🇬🇧","Bonjour 🇫🇷","مرحبا 🇸🇦","Hola 🇪🇸","Ciao 🇮🇹","Hallo 🇳🇱"];
+          const _greetings = [
+            { text: "Hello",   flag: "🇬🇧" },
+            { text: "Bonjour", flag: "🇫🇷" },
+            { text: "مرحبا",   flag: "🇸🇦" },
+            { text: "Hola",    flag: "🇪🇸" },
+            { text: "Ciao",    flag: "🇮🇹" },
+            { text: "Hallo",   flag: "🇳🇱" }
+          ];
           let _gi = 0;
+          function _renderGreeting(g) {
+            return `<span style="font-size:1.6rem;line-height:1;vertical-align:middle;margin-right:6px">${g.flag}</span>${g.text}`;
+          }
           function _nextGreeting() {
             const el = document.getElementById('greeting-line');
             if (!el) return;
-            el.style.transition = 'opacity 0.5s';
             el.style.opacity = '0';
             setTimeout(() => {
               _gi = (_gi + 1) % _greetings.length;
-              el.textContent = _greetings[_gi];
+              el.innerHTML = _renderGreeting(_greetings[_gi]);
               el.style.opacity = '1';
             }, 500);
           }
-          document.getElementById('greeting-line').textContent = _greetings[0];
-          document.getElementById('greeting-line').style.opacity = '1';
+          const _gel = document.getElementById('greeting-line');
+          _gel.innerHTML = _renderGreeting(_greetings[0]);
           setInterval(_nextGreeting, 2000);
         </script>
         <div class="flex flex-wrap gap-4">
