@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-en="Hexagon Centre For Languages and Translation " data-ar="مركز إكزاكون للغات والترجمة">Hexagon Centre - Language Center</title>
+  <meta name="description" content="Professional language courses & translation services in Amman, Jordan. English, French, Arabic, Spanish, Italian, Dutch and more. Near Waha Circle." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --primary: #002395; --accent: #ED2939; }
+    body { font-family: 'Inter', 'Noto Sans Arabic', sans-serif; }
+    html[dir="rtl"] body { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
+    .lang-en { display: block; }
+    .lang-ar { display: none; }
+    html[dir="rtl"] .lang-en { display: none; }
+    html[dir="rtl"] .lang-ar { display: block; }
+    /* French tricolor: Blue #002395 | White | Red #ED2939 */
+    .gradient-hero { background: linear-gradient(135deg, #001a6e 0%, #002395 60%, #0a2fa8 100%); }
+    .fr-red { color: #ED2939; }
+    .fr-blue { color: #002395; }
+    .bg-fr-red { background-color: #ED2939; }
+    .bg-fr-blue { background-color: #002395; }
+    .border-fr-red { border-color: #ED2939; }
+    .border-fr-blue { border-color: #002395; }
+    .card-hover { transition: transform 0.2s, box-shadow 0.2s; }
+    .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+    .filter-btn { padding: 0.375rem 1rem; border-radius: 9999px; border: 1.5px solid #e5e7eb; background: #fff; font-size: 0.8rem; font-weight: 600; color: #6b7280; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .filter-btn:hover { border-color: #002395; color: #002395; }
+    .filter-btn.active-filter { background: #002395; border-color: #002395; color: #fff; }
+    .whatsapp-float { position: fixed; bottom: 28px; right: 28px; z-index: 999; }
+    html[dir="rtl"] .whatsapp-float { right: auto; left: 28px; }
+    .whatsapp-float a { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; background: #25D366; border-radius: 50%; box-shadow: 0 4px 20px rgba(37,211,102,0.5); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.5)} 50%{box-shadow:0 4px 30px rgba(37,211,102,0.8)} }
+    .section-title { position: relative; display: inline-block; }
+    .section-title::after { content:''; position:absolute; bottom:-8px; left:0; width:60px; height:4px; background:#ED2939; border-radius:2px; }
+    html[dir="rtl"] .section-title::after { left:auto; right:0; }
+    /* French tricolor accent bar */
+    .tricolor-bar { display:flex; height:5px; border-radius:3px; overflow:hidden; }
+    .tricolor-bar span:nth-child(1){flex:1;background:#002395}
+    .tricolor-bar span:nth-child(2){flex:1;background:#fff;border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+    .tricolor-bar span:nth-child(3){flex:1;background:#ED2939}
+    .btn-primary { background:#002395; color:#fff; transition:background 0.2s; }
+    .btn-primary:hover { background:#001a6e; }
+    .btn-red { background:#ED2939; color:#fff; transition:background 0.2s; }
+    .btn-red:hover { background:#c0212f; }
+    .flag { font-size: 1.5rem; }
+    nav { backdrop-filter: blur(8px); }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<script>if (history.scrollRestoration) history.scrollRestoration = "manual";</script>
+
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 border-b border-gray-100 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="hex.jfif" class="w-10 h-10 rounded-xl object-cover" alt="Hexagon Centre" />
+        <span class="font-bold text-gray-900 text-lg">
+          <span class="lang-en">Hexagon Centre For Languages and Translation</span>
+          <span class="lang-ar">مركز إكزاكون للغات والترجمة</span>
+        </span>
+      </div>
+      <div class="hidden md:flex items-center gap-7 text-sm font-medium text-gray-600">
+        <a href="#courses" class="hover:text-[#002395] transition-colors">
+          <span class="lang-en">Courses</span><span class="lang-ar">الدورات</span>
+        </a>
+<a href="#services" class="hover:text-[#002395] transition-colors">
+          <span class="lang-en">Translation</span><span class="lang-ar">الترجمة</span>
+        </a>
+        <a href="#about" class="hover:text-[#002395] transition-colors">
+          <span class="lang-en">About</span><span class="lang-ar">عنّا</span>
+        </a>
+        <a href="#contact" class="hover:text-[#002395] transition-colors">
+          <span class="lang-en">Contact</span><span class="lang-ar">تواصل</span>
+        </a>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleLang()" class="text-sm font-semibold px-3 py-1.5 rounded-lg border border-[#002395]/30 text-[#002395] hover:bg-[#002395]/5 transition-colors">
+          <span class="lang-en">عربي</span>
+          <span class="lang-ar">English</span>
+        </button>
+        <a href="https://wa.me/962796831961" target="_blank"
+           class="hidden md:flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span class="lang-en">WhatsApp Us</span>
+          <span class="lang-ar">واتساب</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- French tricolor bar -->
+  <div class="tricolor-bar fixed top-[61px] left-0 right-0 z-40"><span></span><span></span><span></span></div>
+
+  <!-- HERO -->
+  <section class="gradient-hero pt-28 pb-20 px-4 text-white">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+          <span>🌍</span>
+          <span class="lang-en">6 Languages · Professional Translations · Near Waha Circle</span>
+          <span class="lang-ar">٦ لغات · ترجمة احترافية · قرب دوار الواحة</span>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-5">
+          <span class="lang-en">Learn Any Language.<br/><span class="text-[#ED2939]">Open Every Door.</span></span>
+          <span class="lang-ar">تعلّم أي لغة.<br/><span class="text-[#ED2939]">افتح كل الأبواب.</span></span>
+        </h1>
+        <p class="text-blue-100 text-lg mb-8 leading-relaxed max-w-lg">
+          <span class="lang-en">Professional language courses and certified translation services in Amman. Flexible schedules for all levels.</span>
+          <span class="lang-ar">دورات لغوية احترافية وخدمات ترجمة معتمدة في عمّان. جداول مرنة لجميع المستويات.</span>
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="https://wa.me/962796831961?text=Hi%2C%20I%20want%20to%20know%20more%20about%20your%20courses" target="_blank"
+             class="flex items-center gap-2 bg-green-400 hover:bg-green-300 text-green-900 font-bold px-6 py-3 rounded-xl transition-colors text-lg">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            <span class="lang-en">Register Now</span>
+            <span class="lang-ar">سجّل الآن</span>
+          </a>
+          <a href="#courses" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-lg border border-white/20">
+            <span class="lang-en">View Courses</span>
+            <span class="lang-ar">استعرض الدورات</span>
+          </a>
+        </div>
+      </div>
+      <!-- Stats — French tricolor cards -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-2xl p-6 text-center card-hover border-t-4 border-[#002395]">
+          <div class="text-4xl font-extrabold text-[#002395]">9+</div>
+          <div class="text-gray-500 mt-1 text-sm font-medium">
+            <span class="lang-en">Languages</span><span class="lang-ar">لغة</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center card-hover border-t-4 border-[#ED2939]">
+          <div class="text-4xl font-extrabold text-[#ED2939]">500+</div>
+          <div class="text-gray-500 mt-1 text-sm font-medium">
+            <span class="lang-en">Students</span><span class="lang-ar">طالب</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center card-hover border-t-4 border-[#ED2939]">
+          <div class="text-4xl font-extrabold text-[#ED2939]">100%</div>
+          <div class="text-gray-500 mt-1 text-sm font-medium">
+            <span class="lang-en">Certified</span><span class="lang-ar">معتمد</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl p-6 text-center card-hover border-t-4 border-[#002395]">
+          <div class="text-4xl font-extrabold text-[#002395]">24/7</div>
+          <div class="text-gray-500 mt-1 text-sm font-medium">
+            <span class="lang-en">Support</span><span class="lang-ar">دعم</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section id="courses" class="py-14 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-12">
+        <h2 class="text-3xl font-extrabold text-gray-900 section-title">
+          <span class="lang-en">Our Language Courses</span>
+          <span class="lang-ar">دوراتنا اللغوية</span>
+        </h2>
+        <p class="text-gray-500 mt-6 max-w-xl">
+          <span class="lang-en">All levels from beginner to advanced. Group and private classes available.</span>
+          <span class="lang-ar">جميع المستويات من المبتدئ إلى المتقدم. متاحة مجموعات وجلسات فردية.</span>
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" id="courses-grid">
+        <!-- Injected by courses.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSLATION SERVICES -->
+  <section id="services" class="py-14 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-12">
+        <h2 class="text-3xl font-extrabold text-gray-900 section-title">
+          <span class="lang-en">Translation Services</span>
+          <span class="lang-ar">خدمات الترجمة</span>
+        </h2>
+        <p class="text-gray-500 mt-6 max-w-xl">
+          <span class="lang-en">Certified, accurate translations between any of our supported languages.</span>
+          <span class="lang-ar">ترجمة معتمدة ودقيقة بين أي من اللغات المدعومة.</span>
+        </p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl p-7 shadow-sm card-hover border border-gray-100">
+          <div class="text-3xl mb-4">📄</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-2">
+            <span class="lang-en">Document Translation</span><span class="lang-ar">ترجمة وثائق</span>
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            <span class="lang-en">Contracts, certificates, legal docs, academic papers — all officially certified.</span>
+            <span class="lang-ar">عقود، شهادات، وثائق قانونية، أوراق أكاديمية — كلها معتمدة رسمياً.</span>
+          </p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 shadow-sm card-hover border border-gray-100">
+          <div class="text-3xl mb-4">💼</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-2">
+            <span class="lang-en">Business Translation</span><span class="lang-ar">ترجمة تجارية</span>
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            <span class="lang-en">Business reports, marketing materials, websites, and presentations.</span>
+            <span class="lang-ar">تقارير أعمال، مواد تسويقية، مواقع إلكترونية وعروض تقديمية.</span>
+          </p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 shadow-sm card-hover border border-gray-100">
+          <div class="text-3xl mb-4">🏥</div>
+          <h3 class="font-bold text-lg text-gray-900 mb-2">
+            <span class="lang-en">Medical & Technical</span><span class="lang-ar">طبية وتقنية</span>
+          </h3>
+          <p class="text-gray-500 text-sm leading-relaxed">
+            <span class="lang-en">Medical reports, technical manuals, scientific papers with specialized terminology.</span>
+            <span class="lang-ar">تقارير طبية، أدلة تقنية، أوراق علمية بمصطلحات متخصصة.</span>
+          </p>
+        </div>
+      </div>
+      <div class="mt-8 bg-[#002395]/5 border border-[#002395]/15 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div>
+          <p class="font-bold text-[#002395] text-lg">
+            <span class="lang-en">Need a translation? Get a free quote in minutes.</span>
+            <span class="lang-ar">تحتاج ترجمة؟ احصل على عرض سعر مجاني في دقائق.</span>
+          </p>
+          <p class="text-[#002395]/70 text-sm mt-1">
+            <span class="lang-en">Send us the document on WhatsApp and we'll respond quickly.</span>
+            <span class="lang-ar">أرسل لنا الوثيقة على واتساب وسنرد بسرعة.</span>
+          </p>
+        </div>
+        <a href="https://wa.me/962796831961?text=Hello%2C%20I%20need%20a%20translation%20quote" target="_blank"
+           class="shrink-0 flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl transition-colors">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span class="lang-en">Get Free Quote</span>
+          <span class="lang-ar">احصل على عرض مجاني</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="py-14 px-4 bg-gray-50">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-extrabold text-gray-900 section-title mb-10">
+        <span class="lang-en">Life at Hexagon</span>
+        <span class="lang-ar">الحياة في إكزاكون</span>
+      </h2>
+      <!-- Grid -->
+      <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <!-- loaded by JS -->
+      </div>
+      <div id="gallery-empty" class="hidden text-center text-gray-400 py-16 text-sm">
+        <span class="lang-en">Photos coming soon…</span>
+        <span class="lang-ar">الصور قادمة قريباً…</span>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4" onclick="closeLightbox()">
+      <button class="absolute top-4 right-4 text-white text-3xl font-bold leading-none" onclick="closeLightbox()">✕</button>
+      <img id="lightbox-img" src="" alt="" class="w-[90vw] h-[90vh] rounded-xl object-contain" onclick="event.stopPropagation()" />
+      <p id="lightbox-caption" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm bg-black/50 px-4 py-1 rounded-full"></p>
+    </div>
+
+    <script>
+      const GALLERY_FALLBACK = []; // no fallback photos — hides section if sheet is empty
+
+      function openLightbox(src, caption) {
+        const lb = document.getElementById("lightbox");
+        document.getElementById("lightbox-img").src = src;
+        const cap = document.getElementById("lightbox-caption");
+        cap.textContent = caption || "";
+        cap.classList.toggle("hidden", !caption);
+        lb.classList.remove("hidden");
+        lb.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        const lb = document.getElementById("lightbox");
+        lb.classList.add("hidden");
+        lb.classList.remove("flex");
+        document.body.style.overflow = "";
+      }
+
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+
+      function renderGallery(photos) {
+        const grid = document.getElementById("gallery-grid");
+        const empty = document.getElementById("gallery-empty");
+        if (!photos || photos.length === 0) {
+          document.getElementById("gallery").classList.add("hidden");
+          return;
+        }
+        grid.innerHTML = photos.map(p => `
+          <div class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square bg-gray-200"
+               onclick="openLightbox('${p.url}', '${(p.caption||"").replace(/'/g,"\\'")}')">
+            <img src="${p.url}" alt="${p.caption || "Hexagon Centre"}"
+                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                 onerror="this.parentElement.style.display='none'" />
+            ${p.caption ? `<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <p class="text-white text-xs font-medium">${p.caption}</p>
+            </div>` : ""}
+          </div>`).join("");
+      }
+
+      async function loadGallery() {
+        try {
+          const url = typeof GOOGLE_SCRIPT_URL !== "undefined" && !GOOGLE_SCRIPT_URL.startsWith("[")
+            ? GOOGLE_SCRIPT_URL + "?action=gallery" : null;
+          if (url) {
+            const res = await fetch(url);
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) { renderGallery(data); return; }
+          }
+        } catch (_) {}
+        renderGallery(GALLERY_FALLBACK);
+      }
+
+      window.addEventListener("load", loadGallery);
+    </script>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="py-14 px-4 bg-white">
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-start">
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 section-title mb-8">
+          <span class="lang-en">About Our Center</span>
+          <span class="lang-ar">عن مركزنا</span>
+        </h2>
+        <p class="text-gray-600 leading-relaxed mb-5">
+          <span class="lang-en">Hexagon Centre For Languages and Translation is a professional language center based in Amman, dedicated to helping students and professionals achieve their language goals through expert instruction and flexible programs.</span>
+          <span class="lang-ar">مركز إكزاكون للغات والترجمة هو مركز لغات احترافي يقع في عمان، مكرّس لمساعدة الطلاب والمهنيين على تحقيق أهدافهم اللغوية من خلال تعليم متخصص وبرامج مرنة.</span>
+        </p>
+        <p class="text-gray-600 leading-relaxed mb-8">
+          <span class="lang-en">Our certified teachers bring real-world experience to every class. Whether you need English for work, French for travel, or certified translation for official documents — we have you covered.</span>
+          <span class="lang-ar">يجلب معلمونا المعتمدون خبرة حقيقية إلى كل درس. سواء كنت تحتاج الإنجليزية للعمل، الفرنسية للسفر، أو ترجمة معتمدة للوثائق الرسمية — نحن هنا لك.</span>
+        </p>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#002395]/10 rounded-xl flex items-center justify-center text-[#002395] font-bold">✓</div>
+            <span class="text-gray-700 text-sm font-medium">
+              <span class="lang-en">Certified Teachers</span><span class="lang-ar">معلمون معتمدون</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#002395]/10 rounded-xl flex items-center justify-center text-[#002395] font-bold">✓</div>
+            <span class="text-gray-700 text-sm font-medium">
+              <span class="lang-en">Flexible Schedule</span><span class="lang-ar">جدول مرن</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#002395]/10 rounded-xl flex items-center justify-center text-[#002395] font-bold">✓</div>
+            <span class="text-gray-700 text-sm font-medium">
+              <span class="lang-en">Small Groups</span><span class="lang-ar">مجموعات صغيرة</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#002395]/10 rounded-xl flex items-center justify-center text-[#002395] font-bold">✓</div>
+            <span class="text-gray-700 text-sm font-medium">
+              <span class="lang-en">Official Certificates</span><span class="lang-ar">شهادات رسمية</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Testimonials — loaded dynamically from Google Sheet, fallback to hardcoded -->
+      <div>
+        <h2 id="reviews-heading" class="text-3xl font-extrabold text-gray-900 section-title mb-8">
+          <span class="lang-en">Hear It From Them</span>
+          <span class="lang-ar">اسمعها منهم</span>
+        </h2>
+        <div id="reviews-container" class="space-y-4"></div>
+        <div class="mt-6 flex justify-center gap-3">
+          <div id="reviews-show-more" class="hidden">
+            <button onclick="showAllReviews()"
+              class="text-sm font-semibold text-[#002395] border border-[#002395]/30 px-5 py-2 rounded-full hover:bg-[#002395]/5 transition-colors">
+              <span class="lang-en">Show more reviews</span>
+              <span class="lang-ar">عرض المزيد من التقييمات</span>
+            </button>
+          </div>
+          <div id="reviews-show-less" class="hidden">
+            <button onclick="showLessReviews()"
+              class="text-sm font-semibold text-gray-500 border border-gray-300 px-5 py-2 rounded-full hover:bg-gray-50 transition-colors">
+              <span class="lang-en">Show less</span>
+              <span class="lang-ar">عرض أقل</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <script>
+        const FALLBACK_REVIEWS = [
+          { name: "Bakr Abu Rumman",   initials: "BA", color: "#002395", stars: 5, text: "مركز مميز من كل النواحي ومهتمين بأدق التفاصيل، ومن ناحية تدريس تندريس ممنهج وكادر تعليمي على أعلى كفاءة. تحياتي الكم والله يعطيكم الف عافية ❤️" },
+          { name: "Alia Tamer Almufleh", initials: "AT", color: "#7c3aed", stars: 5, text: "احلى و احسن مركز تعاملت معه 💕 و رح ضلني متعامله معه للسنين الجايه ما شاء الله يباركلكم" },
+          { name: "معن القرعان",         initials: "MQ", color: "#0d9488", stars: 5, text: "مركز إكزاكون للغات رائع من كل النواحي ويوجد فيه مدرسين ذو خبره عاليه جداً وتعامل راقي وأساليب تدريس متنوعة ويخليك تتعلم اللغة من الصفر وأسعاره مش غاليه" },
+          { name: "Sleeman Nawayseh",   initials: "SN", color: "#16a34a", stars: 5, text: "très bien centre ⭐⭐⭐⭐⭐ متميزون جداً وأسلوب رائع وجميل وإيصال المعلومات بكل سلاسة وأساليب تعليمية مميزة — aller hexagon" }
+        ];
+        const REVIEWS_PER_PAGE = 4;
+        let _allReviews = [];
+
+        function reviewCard(r) {
+          const stars = "★".repeat(Math.min(5, r.stars || 5));
+          return `<div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0" style="background:${r.color}">${r.initials}</div>
+              <div>
+                <div class="font-semibold text-gray-900">${r.name}</div>
+                <div class="text-yellow-400 text-sm">${stars}</div>
+              </div>
+            </div>
+            <p class="text-gray-600 text-sm leading-relaxed">"${r.text}"</p>
+          </div>`;
+        }
+
+        function renderReviews(reviews, showAll) {
+          const container = document.getElementById("reviews-container");
+          const showMoreBtn = document.getElementById("reviews-show-more");
+          const showLessBtn = document.getElementById("reviews-show-less");
+          const visible = showAll ? reviews : reviews.slice(0, REVIEWS_PER_PAGE);
+          container.innerHTML = visible.map(reviewCard).join("");
+          const hasMore = reviews.length > REVIEWS_PER_PAGE;
+          showMoreBtn.classList.toggle("hidden", !hasMore || showAll);
+          showLessBtn.classList.toggle("hidden", !hasMore || !showAll);
+        }
+
+        function showAllReviews() {
+          renderReviews(_allReviews, true);
+        }
+
+        function showLessReviews() {
+          renderReviews(_allReviews, false);
+          document.getElementById("reviews-heading").scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        async function loadReviews() {
+          try {
+            const url = typeof GOOGLE_SCRIPT_URL !== "undefined" && !GOOGLE_SCRIPT_URL.startsWith("[")
+              ? GOOGLE_SCRIPT_URL + "?action=reviews" : null;
+            if (url) {
+              const res = await fetch(url);
+              const data = await res.json();
+              if (Array.isArray(data) && data.length > 0) {
+                _allReviews = data;
+                renderReviews(_allReviews, false);
+                return;
+              }
+            }
+          } catch {}
+          // Fallback to hardcoded
+          _allReviews = FALLBACK_REVIEWS;
+          renderReviews(_allReviews, false);
+        }
+
+        document.addEventListener("DOMContentLoaded", loadReviews);
+      </script>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-14 px-4 bg-gray-50">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-extrabold text-gray-900 mb-4">
+        <span class="lang-en">Ready to Start?</span>
+        <span class="lang-ar">مستعد للبدء؟</span>
+      </h2>
+      <p class="text-gray-500 mb-10 text-lg">
+        <span class="lang-en">Chat with us on WhatsApp. We reply in minutes, 7 days a week.</span>
+        <span class="lang-ar">تحدّث معنا على واتساب. نرد في دقائق، 7 أيام في الأسبوع.</span>
+      </p>
+      <div class="grid md:grid-cols-3 gap-5 mb-10">
+        <a href="https://wa.me/962796831961" target="_blank"
+           class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100 flex flex-col items-center gap-3 group">
+          <div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center group-hover:bg-green-500 transition-colors">
+            <svg class="w-7 h-7 text-green-600 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </div>
+          <div class="font-bold text-gray-900">WhatsApp</div>
+          <div class="text-[#002395] text-sm font-medium">+962 796 831 961</div>
+        </a>
+        <a href="https://maps.app.goo.gl/hexagon" onclick="window.open('https://www.google.com/maps/search/?api=1&query=Hexagon+Centre+Amman&query_place_id=0x151ca1967f4df497:0x4807653b9a965195','_blank');return false;"
+           class="bg-white rounded-2xl p-6 shadow-sm card-hover border border-gray-100 flex flex-col items-center gap-3 group cursor-pointer">
+          <div class="w-14 h-14 bg-[#002395]/10 rounded-2xl flex items-center justify-center group-hover:bg-[#002395] transition-colors">
+            <svg class="w-7 h-7 text-[#002395] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div class="font-bold text-gray-900">
+            <span class="lang-en">Location</span><span class="lang-ar">الموقع</span>
+          </div>
+          <div class="text-gray-500 text-sm">Near Waha Circle, Amman</div>
+        </a>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col items-center gap-3">
+          <div class="w-14 h-14 bg-[#ED2939]/10 rounded-2xl flex items-center justify-center">
+            <svg class="w-7 h-7 text-[#ED2939]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="font-bold text-gray-900">
+            <span class="lang-en">Working Hours</span><span class="lang-ar">ساعات العمل</span>
+          </div>
+          <div class="text-gray-500 text-sm">
+            <span class="lang-en">Sat–Thu: 9am–9pm</span>
+            <span class="lang-ar">السبت–الخميس: ٩ص–٩م</span>
+          </div>
+        </div>
+      </div>
+      <a href="https://wa.me/962796831961?text=Hello%2C%20I%20would%20like%20to%20enroll%20in%20a%20course" target="_blank"
+         class="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white font-bold px-10 py-4 rounded-2xl text-xl transition-colors shadow-lg shadow-green-200">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="lang-en">Start on WhatsApp</span>
+        <span class="lang-ar">ابدأ على واتساب</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 py-10 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+      <div class="flex items-center gap-3">
+        <img src="hex.jfif" class="w-10 h-10 rounded-xl object-cover" alt="Hexagon Centre" />
+        <div class="font-bold text-white text-base">
+          <span class="lang-en">Hexagon Centre For Languages and Translation</span>
+          <span class="lang-ar">مركز إكزاكون للغات والترجمة</span>
+        </div>
+      </div>
+      <div>
+        <span class="lang-en">© 2026 Hexagon Centre For Languages and Translation. All rights reserved.</span>
+        <span class="lang-ar">© 2026 مركز إكزاكون للغات والترجمة. جميع الحقوق محفوظة.</span>
+      </div>
+      <div class="flex gap-5 items-center">
+        <a href="#courses" class="hover:text-white transition-colors">
+          <span class="lang-en">Courses</span><span class="lang-ar">الدورات</span>
+        </a>
+        <a href="#services" class="hover:text-white transition-colors">
+          <span class="lang-en">Translation</span><span class="lang-ar">الترجمة</span>
+        </a>
+        <a href="https://wa.me/962796831961" target="_blank" class="hover:text-white transition-colors">WhatsApp</a>
+        <a href="https://www.instagram.com/hexagon_centre" target="_blank" class="hover:text-white transition-colors" aria-label="Instagram">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="https://www.facebook.com/Hexagoncentr" target="_blank" class="hover:text-white transition-colors" aria-label="Facebook">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP BUTTON -->
+
+  <!-- ENROLLMENT MODAL -->
+  <div id="enroll-modal" class="hidden fixed inset-0 z-[1000] items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+      <button onclick="closeEnrollModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+
+      <h3 id="modal-title" class="text-xl font-bold text-gray-900 mb-0.5"></h3>
+      <p id="modal-subtitle" class="text-sm font-medium text-[#002395] mb-1 hidden"></p>
+      <p class="text-gray-500 text-sm mb-5">
+        <span class="lang-en">Fill in your details and we'll confirm your spot within 1 hour.</span>
+        <span class="lang-ar">أدخل بياناتك وسنؤكد مكانك خلال ساعة.</span>
+      </p>
+
+      <!-- Form -->
+      <div id="enroll-form-body" class="space-y-3">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Full Name *</span><span class="lang-ar">الاسم الكامل *</span>
+          </label>
+          <input id="enroll-name" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors"
+            placeholder="Ahmad Khalil / أحمد خليل" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Phone Number *</span><span class="lang-ar">رقم الهاتف *</span>
+          </label>
+          <input id="enroll-phone" type="tel" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors"
+            placeholder="+962 7X XXX XXXX" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Email (optional)</span><span class="lang-ar">البريد الإلكتروني (اختياري)</span>
+          </label>
+          <input id="enroll-email" type="email" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors"
+            placeholder="ahmad@gmail.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Level</span><span class="lang-ar">المستوى</span>
+          </label>
+          <select id="enroll-level" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors bg-white"></select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Preferred Schedule</span><span class="lang-ar">الجدول المفضل</span>
+          </label>
+          <select id="enroll-schedule" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors bg-white">
+            <option value="Morning (8am–12pm)">Morning / صباحي (8am–12pm)</option>
+            <option value="Evening (4pm–8pm)">Evening / مسائي (4pm–8pm)</option>
+            <option value="Weekend - Saturday">Weekend / عطلة (Saturday)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            <span class="lang-en">Notes (optional)</span><span class="lang-ar">ملاحظات (اختياري)</span>
+          </label>
+          <textarea id="enroll-notes" rows="2" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#002395] transition-colors resize-none"
+            placeholder="Any questions or special requests..."></textarea>
+        </div>
+
+        <button id="enroll-submit-btn" onclick="submitEnrollment()"
+          class="mt-2 w-full flex items-center justify-center gap-2 text-white font-bold py-3 rounded-xl transition-colors text-sm disabled:opacity-60"
+          style="background:#002395" onmouseover="if(!this.disabled)this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
+          <span class="lang-en">Submit Registration</span>
+          <span class="lang-ar">إرسال التسجيل</span>
+        </button>
+      </div>
+
+      <!-- Success state -->
+      <div id="enroll-success" class="hidden text-center py-6">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h4 class="text-lg font-bold text-gray-900 mb-2">
+          <span class="lang-en">Registration Received!</span>
+          <span class="lang-ar">تم استلام طلبك!</span>
+        </h4>
+        <p class="text-gray-500 text-sm mb-5">
+          <span class="lang-en">We'll contact you within 1 hour to confirm your spot.</span>
+          <span class="lang-ar">سنتواصل معك خلال ساعة لتأكيد مكانك.</span>
+        </p>
+        <button onclick="closeEnrollModal()"
+          class="px-6 py-2.5 rounded-xl text-white text-sm font-bold transition-colors"
+          style="background:#002395">
+          <span class="lang-en">Done</span><span class="lang-ar">تم</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="courses.js"></script>
+  <script>
+    function toggleLang() {
+      const html = document.getElementById('html-root');
+      const isRTL = html.getAttribute('dir') === 'rtl';
+      html.setAttribute('dir', isRTL ? 'ltr' : 'rtl');
+      html.setAttribute('lang', isRTL ? 'en' : 'ar');
+    }
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
