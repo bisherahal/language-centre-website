@@ -173,8 +173,15 @@ function doPost(e) {
       const spotsSheet = ss.getSheetByName("Hexagon Spots");
       if (spotsSheet) {
         const spotsData = spotsSheet.getDataRange().getValues();
+        const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        const sentId = norm(payload.courseId);
+        const sentLevel = norm(payload.level || '');
         for (let i = 1; i < spotsData.length; i++) {
-          if (String(spotsData[i][0]).trim() === String(payload.courseId).trim()) {
+          const rowId = norm(spotsData[i][0]);
+          // Exact match, or courseId+level combo match, or row starts with courseId and contains level prefix
+          if (rowId === sentId ||
+              rowId === sentId + '-' + sentLevel ||
+              (rowId.startsWith(sentId + '-') && sentLevel && rowId.includes(sentLevel.split('-')[0]))) {
             spotsSheet.getRange(i + 1, 2).setValue(Number(spotsData[i][1]) + 1);
             break;
           }
