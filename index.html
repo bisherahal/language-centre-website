@@ -127,38 +127,41 @@
           <span class="lang-en">Professional language courses and certified translation services in Amman. Flexible schedules for all levels.</span>
           <span class="lang-ar">دورات لغوية احترافية وخدمات ترجمة معتمدة في عمّان. جداول مرنة لجميع المستويات.</span>
         </p>
-        <div class="flex items-center gap-3 mb-8">
-          <span class="text-white/50 text-sm uppercase tracking-widest font-semibold">We speak</span>
+        <div class="inline-flex items-center gap-3 bg-white/10 border border-white/20 rounded-2xl px-5 py-3 mb-8">
+          <span class="text-white/55 text-xs font-bold uppercase tracking-widest">We speak</span>
+          <span class="w-px h-5 bg-white/20"></span>
           <span id="greeting-line" aria-live="polite"
-                class="text-2xl font-bold text-white tracking-wide"
-                style="transition:opacity 0.5s;opacity:1;"></span>
+                class="text-3xl font-extrabold text-white"
+                style="transition:opacity 0.4s,transform 0.4s;opacity:1;transform:scale(1);display:inline-flex;align-items:center;gap:10px;"></span>
         </div>
         <script>
           const _greetings = [
-            { text: "Hello",   flag: "🇬🇧" },
-            { text: "Bonjour", flag: "🇫🇷" },
-            { text: "مرحبا",   flag: "🇸🇦" },
-            { text: "Hola",    flag: "🇪🇸" },
-            { text: "Ciao",    flag: "🇮🇹" },
-            { text: "Hallo",   flag: "🇳🇱" }
+            { text: "Hello",   cc: "gb" },
+            { text: "Bonjour", cc: "fr" },
+            { text: "مرحبا",   cc: "sa" },
+            { text: "Hola",    cc: "es" },
+            { text: "Ciao",    cc: "it" },
+            { text: "Hallo",   cc: "nl" }
           ];
           let _gi = 0;
           function _renderGreeting(g) {
-            return `<span style="font-size:1.6rem;line-height:1;vertical-align:middle;margin-right:6px">${g.flag}</span>${g.text}`;
+            return `<img src="https://flagcdn.com/40x30/${g.cc}.png" width="40" height="30" style="border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,0.4);flex-shrink:0" alt="${g.cc} flag">${g.text}`;
           }
           function _nextGreeting() {
             const el = document.getElementById('greeting-line');
             if (!el) return;
             el.style.opacity = '0';
+            el.style.transform = 'scale(0.85)';
             setTimeout(() => {
               _gi = (_gi + 1) % _greetings.length;
               el.innerHTML = _renderGreeting(_greetings[_gi]);
               el.style.opacity = '1';
-            }, 500);
+              el.style.transform = 'scale(1)';
+            }, 400);
           }
           const _gel = document.getElementById('greeting-line');
           _gel.innerHTML = _renderGreeting(_greetings[0]);
-          setInterval(_nextGreeting, 2000);
+          setInterval(_nextGreeting, 2200);
         </script>
         <div class="flex flex-wrap gap-4">
           <a href="https://wa.me/962796831961?text=Hi%2C%20I%20want%20to%20know%20more%20about%20your%20courses" target="_blank"
