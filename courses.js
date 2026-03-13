@@ -28,6 +28,7 @@ const courses = [
   },
   {
     id: "french",
+    popular: true,
     flag: "🇫🇷", flagCode: "fr",
     nameEn: "French",
     nameAr: "الفرنسية",
@@ -731,6 +732,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // ============================================================
 document.addEventListener("DOMContentLoaded", () => {
   document.body.style.opacity = "1";
+
+  // Scroll reveal
+  const _revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); _revealObserver.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(el => _revealObserver.observe(el));
 
   document.addEventListener("click", e => {
     const a = e.target.closest("a[href]");

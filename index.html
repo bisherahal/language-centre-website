@@ -48,6 +48,12 @@
     .flag { font-size: 1.5rem; }
     nav { backdrop-filter: blur(8px); }
     body { opacity: 0; transition: opacity 0.35s ease; }
+    .reveal { opacity:0; transform:translateY(32px); transition:opacity 0.55s ease, transform 0.55s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    .reveal-delay-1 { transition-delay:0.1s; }
+    .reveal-delay-2 { transition-delay:0.2s; }
+    .reveal-delay-3 { transition-delay:0.3s; }
+    .reveal-delay-4 { transition-delay:0.4s; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -230,7 +236,7 @@
   <!-- COURSES -->
   <section id="courses" class="py-14 px-4 bg-white">
     <div class="max-w-6xl mx-auto">
-      <div class="mb-12">
+      <div class="mb-12 reveal">
         <h2 class="text-3xl font-extrabold text-gray-900 section-title">
           <span class="lang-en">Our Language Courses</span>
           <span class="lang-ar">دوراتنا اللغوية</span>
@@ -250,7 +256,7 @@
   <!-- TRANSLATION SERVICES -->
   <section id="services" class="py-14 px-4 bg-white">
     <div class="max-w-6xl mx-auto">
-      <div class="mb-12">
+      <div class="mb-12 reveal">
         <h2 class="text-3xl font-extrabold text-gray-900 section-title">
           <span class="lang-en">Translation Services</span>
           <span class="lang-ar">خدمات الترجمة</span>
@@ -316,7 +322,7 @@
   <!-- GALLERY -->
   <section id="gallery" class="py-14 px-4 bg-gray-50">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl font-extrabold text-gray-900 section-title mb-10">
+      <h2 class="text-3xl font-extrabold text-gray-900 section-title mb-10 reveal">
         <span class="lang-en">Life at Hexagon</span>
         <span class="lang-ar">الحياة في إكزاكون</span>
       </h2>
@@ -399,7 +405,7 @@
   <!-- ABOUT -->
   <section id="about" class="py-14 px-4 bg-white">
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-start">
-      <div>
+      <div class="reveal">
         <h2 class="text-3xl font-extrabold text-gray-900 section-title mb-8">
           <span class="lang-en">About Our Center</span>
           <span class="lang-ar">عن مركزنا</span>
@@ -440,7 +446,7 @@
         </div>
       </div>
       <!-- Testimonials — loaded dynamically from Google Sheet, fallback to hardcoded -->
-      <div>
+      <div class="reveal reveal-delay-2">
         <h2 id="reviews-heading" class="text-3xl font-extrabold text-gray-900 section-title mb-8">
           <span class="lang-en">Hear It From Them</span>
           <span class="lang-ar">اسمعها منهم</span>
