@@ -360,10 +360,14 @@ function submitEnrollment() {
   btn.disabled = true;
   btn.innerHTML = `<span class="lang-en">Sending…</span><span class="lang-ar">جارٍ الإرسال…</span>`;
 
+  // Find the exact spot row ID so Apps Script can increment the right row
+  const spotMatch = (typeof findLevelSpots === "function") ? findLevelSpots(course.id, level) : null;
+  const spotId = spotMatch ? spotMatch.id : (course.id || course.nameEn);
+
   const payload = {
     name, phone, email,
     course: course.nameEn,
-    courseId: course.id || course.nameEn,
+    courseId: spotId,
     subtitle: course.subtitleEn || "",
     level, schedule, notes,
     date: new Date().toISOString(),
