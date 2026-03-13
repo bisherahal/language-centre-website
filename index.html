@@ -50,7 +50,10 @@
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
-<script>if (history.scrollRestoration) history.scrollRestoration = "manual";</script>
+<script>
+  if (history.scrollRestoration) history.scrollRestoration = "manual";
+  window.addEventListener("load", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+</script>
 
   <!-- NAVBAR -->
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/95 border-b border-gray-100 shadow-sm">
