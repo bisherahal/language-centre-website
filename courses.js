@@ -385,12 +385,52 @@ function submitEnrollment() {
   document.getElementById("enroll-form-body").classList.add("hidden");
   document.getElementById("enroll-success").classList.remove("hidden");
 
-  // 🎉 Confetti burst
-  if (typeof confetti === "function") {
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
-    setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.4 }, angle: 60 }), 300);
-    setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.4 }, angle: 120 }), 600);
+  // 🎉 Confetti burst (no external library)
+  _launchConfetti();
+}
+
+function _launchConfetti() {
+  const canvas = document.createElement("canvas");
+  canvas.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999";
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#002395","#ED2939","#ffffff","#f59e0b","#10b981","#8b5cf6"];
+  const pieces = Array.from({ length: 150 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    w: 8 + Math.random() * 8,
+    h: 5 + Math.random() * 5,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 4,
+    vy: 2 + Math.random() * 4,
+    angle: Math.random() * 360,
+    spin: (Math.random() - 0.5) * 6
+  }));
+
+  let frame;
+  const start = performance.now();
+  function draw(now) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.angle += p.spin;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.angle * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    if (now - start < 3000) {
+      frame = requestAnimationFrame(draw);
+    } else {
+      cancelAnimationFrame(frame);
+      canvas.remove();
+    }
   }
+  requestAnimationFrame(draw);
 }
 
 // ============================================================
