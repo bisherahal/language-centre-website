@@ -379,7 +379,7 @@
                 </div>
               </div>
               ${spotsHTML}
-              <button onclick="openModal('${title.replace(/'/g,"\\'")}', '${classInfoStr.replace(/'/g,"\\'")}')"
+              <button onclick="openModal('${title.replace(/'/g,"\\'")}', '${classInfoStr.replace(/'/g,"\\'")}', '${level.replace(/'/g,"\\'")}')"
                 class="shrink-0 font-bold px-5 py-2.5 rounded-xl text-white text-sm transition-colors"
                 style="background:#002395" onmouseover="this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
                 <span class="lang-en">Enroll</span>
@@ -446,7 +446,7 @@
       });
     }
 
-    function openModal(classTitle, classInfo) {
+    function openModal(classTitle, classInfo, classLevel) {
       const isRTL = document.getElementById('html-root').getAttribute('dir') === 'rtl';
       selectedClassInfo = classInfo;
       document.getElementById('modal-title').textContent = isRTL
@@ -458,6 +458,14 @@
       btn.disabled = false;
       btn.innerHTML = `<span class="lang-en">Submit Registration</span><span class="lang-ar">إرسال التسجيل</span>`;
       ['enroll-name','enroll-phone','enroll-email','enroll-notes'].forEach(id => document.getElementById(id).value = '');
+      // Pre-select the level matching the clicked class
+      if (classLevel) {
+        const select = document.getElementById('enroll-level');
+        const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const normCL = norm(classLevel);
+        const match = Array.from(select.options).find(o => norm(o.value) && normCL.startsWith(norm(o.value).slice(0,5)));
+        if (match) select.value = match.value;
+      }
       const modal = document.getElementById('enroll-modal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
