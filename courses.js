@@ -682,3 +682,20 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   observer.observe(document.getElementById("html-root"), { attributes: true, attributeFilter: ["dir"] });
 });
+
+// ============================================================
+// PAGE TRANSITIONS — fade in on load, fade out on navigate
+// ============================================================
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.style.opacity = "1";
+
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a[href]");
+    if (!a) return;
+    const href = a.getAttribute("href");
+    if (!href || href.startsWith("#") || href.startsWith("http") || href.startsWith("mailto") || href.startsWith("tel") || a.target === "_blank") return;
+    e.preventDefault();
+    document.body.style.opacity = "0";
+    setTimeout(() => { window.location.href = href; }, 350);
+  });
+});
