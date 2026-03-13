@@ -384,6 +384,13 @@ function submitEnrollment() {
   // Show success state
   document.getElementById("enroll-form-body").classList.add("hidden");
   document.getElementById("enroll-success").classList.remove("hidden");
+
+  // 🎉 Confetti burst
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 120, spread: 80, origin: { y: 0.5 } });
+    setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.4 }, angle: 60 }), 300);
+    setTimeout(() => confetti({ particleCount: 60, spread: 120, origin: { y: 0.4 }, angle: 120 }), 600);
+  }
 }
 
 // ============================================================
