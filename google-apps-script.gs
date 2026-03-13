@@ -168,6 +168,20 @@ function doPost(e) {
       payload.lang     || "en"
     ]);
 
+    // Auto-increment TakenSpots in "Hexagon Spots" sheet
+    if (payload.courseId) {
+      const spotsSheet = ss.getSheetByName("Hexagon Spots");
+      if (spotsSheet) {
+        const spotsData = spotsSheet.getDataRange().getValues();
+        for (let i = 1; i < spotsData.length; i++) {
+          if (String(spotsData[i][0]).trim() === String(payload.courseId).trim()) {
+            spotsSheet.getRange(i + 1, 2).setValue(Number(spotsData[i][1]) + 1);
+            break;
+          }
+        }
+      }
+    }
+
     return jsonResponse({ status: "ok" });
   } catch (e) {
     return jsonResponse({ error: e.message });
