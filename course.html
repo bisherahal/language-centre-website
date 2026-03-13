@@ -461,9 +461,10 @@
       // Pre-select the level matching the clicked class
       if (classLevel) {
         const select = document.getElementById('enroll-level');
-        const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const normCL = norm(classLevel);
-        const match = Array.from(select.options).find(o => norm(o.value) && normCL.startsWith(norm(o.value).slice(0,5)));
+        const firstWord = classLevel.toLowerCase().split(/[\s·\-\|]/)[0];
+        const match = Array.from(select.options).find(o =>
+          o.value.toLowerCase().includes(firstWord) || firstWord.includes(o.value.toLowerCase().split(/[\s(]/)[0])
+        );
         if (match) select.value = match.value;
       }
       const modal = document.getElementById('enroll-modal');
