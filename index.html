@@ -174,6 +174,11 @@
             <span class="lang-en">View Courses</span>
             <span class="lang-ar">استعرض الدورات</span>
           </a>
+          <button onclick="openQuiz()" class="flex items-center gap-2 bg-[#ED2939] hover:bg-[#c0202d] text-white font-bold px-6 py-3 rounded-xl transition-colors text-lg">
+            <span>🎯</span>
+            <span class="lang-en">Find Your Language</span>
+            <span class="lang-ar">اكتشف لغتك</span>
+          </button>
         </div>
       </div>
       <!-- Stats — French tricolor cards -->
@@ -749,6 +754,176 @@
         e.preventDefault();
         document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
       });
+    });
+  </script>
+
+  <!-- LANGUAGE QUIZ MODAL -->
+  <div id="quiz-modal" class="hidden fixed inset-0 z-[2000] flex items-center justify-center bg-black/50 px-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+      <button onclick="closeQuiz()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-bold">✕</button>
+
+      <!-- Progress bar -->
+      <div class="mb-6">
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span id="quiz-step-label" class="lang-en">Step 1 of 3</span>
+          <span id="quiz-step-label-ar" class="lang-ar">خطوة 1 من 3</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-1.5">
+          <div id="quiz-progress-bar" class="h-1.5 rounded-full transition-all duration-500" style="background:#002395;width:33%"></div>
+        </div>
+      </div>
+
+      <!-- Q1 -->
+      <div id="quiz-q1">
+        <p class="text-lg font-bold text-gray-900 mb-5 lang-en">Who are you enrolling for?</p>
+        <p class="text-lg font-bold text-gray-900 mb-5 lang-ar">لمن تريد التسجيل؟</p>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="quizAnswer(1,'self')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <div class="text-3xl mb-2">👤</div>
+            <div class="font-semibold text-gray-800 text-sm lang-en">For myself</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">لنفسي</div>
+          </button>
+          <button onclick="quizAnswer(1,'child')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <div class="text-3xl mb-2">👶</div>
+            <div class="font-semibold text-gray-800 text-sm lang-en">For my child</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">لطفلي</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div id="quiz-q2" class="hidden">
+        <p class="text-lg font-bold text-gray-900 mb-5 lang-en">What's your main goal?</p>
+        <p class="text-lg font-bold text-gray-900 mb-5 lang-ar">ما هو هدفك الرئيسي؟</p>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="quizAnswer(2,'travel')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <div class="text-3xl mb-2">🌍</div>
+            <div class="font-semibold text-gray-800 text-sm lang-en">Travel & culture</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">السفر والثقافة</div>
+          </button>
+          <button onclick="quizAnswer(2,'career')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <div class="text-3xl mb-2">💼</div>
+            <div class="font-semibold text-gray-800 text-sm lang-en">Career & work</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">العمل والمهنة</div>
+          </button>
+          <button onclick="quizAnswer(2,'exam')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <div class="text-3xl mb-2">📜</div>
+            <div class="font-semibold text-gray-800 text-sm lang-en">Get certified</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">شهادة رسمية</div>
+          </button>
+          <button onclick="quizAnswer(2,'fun')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <div class="text-3xl mb-2">💬</div>
+            <div class="font-semibold text-gray-800 text-sm lang-en">Fun & conversation</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">تحدث واستمتع</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div id="quiz-q3" class="hidden">
+        <p class="text-lg font-bold text-gray-900 mb-5 lang-en">Which language world excites you?</p>
+        <p class="text-lg font-bold text-gray-900 mb-5 lang-ar">أي لغة تجذبك أكثر؟</p>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="quizAnswer(3,'english')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <img src="https://flagcdn.com/48x36/gb.png" class="mx-auto mb-2 rounded" alt="English">
+            <div class="font-semibold text-gray-800 text-sm lang-en">English</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">الإنجليزية</div>
+          </button>
+          <button onclick="quizAnswer(3,'french')" class="quiz-opt p-4 rounded-2xl border-2 border-gray-100 hover:border-[#002395] hover:bg-blue-50 transition-all text-center">
+            <img src="https://flagcdn.com/48x36/fr.png" class="mx-auto mb-2 rounded" alt="French">
+            <div class="font-semibold text-gray-800 text-sm lang-en">French</div>
+            <div class="font-semibold text-gray-800 text-sm lang-ar">الفرنسية</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="quiz-result" class="hidden text-center">
+        <div class="text-5xl mb-4" id="quiz-result-emoji"></div>
+        <h3 class="text-xl font-extrabold text-gray-900 mb-2" id="quiz-result-title"></h3>
+        <p class="text-gray-500 text-sm mb-6" id="quiz-result-desc"></p>
+        <a id="quiz-result-link" href="#" class="block w-full text-white font-bold py-3 rounded-xl text-sm mb-3 transition-colors" style="background:#002395">
+          <span class="lang-en">View Course →</span><span class="lang-ar">عرض الدورة ←</span>
+        </a>
+        <button onclick="restartQuiz()" class="text-sm text-gray-400 hover:text-gray-600 underline">
+          <span class="lang-en">Start over</span><span class="lang-ar">ابدأ من جديد</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const _quizAnswers = {};
+    const _quizResults = {
+      'self-travel-english':  { emoji:'✈️', title:'English – Intermediate / Advanced', desc:'Perfect for exploring the English-speaking world. Build real fluency fast.', link:'course.html?id=english' },
+      'self-travel-french':   { emoji:'🗼', title:'French – General Courses (A1–B2)', desc:'From Paris to Marrakech — French opens doors across 29 countries.', link:'course.html?id=french' },
+      'self-career-english':  { emoji:'💼', title:'English – Advanced / Conversation', desc:'The language of global business. Stand out in interviews and meetings.', link:'course.html?id=english' },
+      'self-career-french':   { emoji:'🎖️', title:'French – B1/B2 or Peacekeeping', desc:'French is the second language of diplomacy and international organisations.', link:'course.html?id=french' },
+      'self-exam-english':    { emoji:'🏆', title:'English – IELTS Preparation', desc:'Get the score you need. Our IELTS prep course is intensive and results-focused.', link:'course.html?id=english' },
+      'self-exam-french':     { emoji:'📜', title:'French – DELF / DALF Certification', desc:'Internationally recognised French certification. We prepare you for every level.', link:'course.html?id=french' },
+      'self-fun-english':     { emoji:'🎉', title:'English – Conversation Course', desc:'No pressure, just talk. Build confidence and fluency in a relaxed setting.', link:'course.html?id=english' },
+      'self-fun-french':      { emoji:'☕', title:'French – Conversation Course', desc:'Chat, laugh, and learn. French conversation classes for the love of the language.', link:'course.html?id=french' },
+      'child-travel-english': { emoji:'🌟', title:'English – Kids (5–15 yrs)', desc:'Fun, interactive classes designed for children. Build a strong foundation early.', link:'course.html?id=english' },
+      'child-travel-french':  { emoji:'🎨', title:'French – Kids (5–15 yrs)', desc:'Children learn languages faster than anyone. Start them on French today.', link:'course.html?id=french' },
+      'child-career-english': { emoji:'🌟', title:'English – Kids (5–15 yrs)', desc:'English fluency is the greatest gift you can give your child\'s future.', link:'course.html?id=english' },
+      'child-career-french':  { emoji:'🎨', title:'French – Kids (5–15 yrs)', desc:'Bilingual children have stronger cognitive skills and brighter career prospects.', link:'course.html?id=french' },
+      'child-exam-english':   { emoji:'🌟', title:'English – Kids (5–15 yrs)', desc:'Build a strong foundation now. Exams come later — confidence comes first.', link:'course.html?id=english' },
+      'child-exam-french':    { emoji:'🎨', title:'French – Kids (5–15 yrs)', desc:'Start young, aim high. French for kids with a focus on building real skills.', link:'course.html?id=french' },
+      'child-fun-english':    { emoji:'🌟', title:'English – Kids (5–15 yrs)', desc:'Learning through play and storytelling. Kids love our English classes!', link:'course.html?id=english' },
+      'child-fun-french':     { emoji:'🎨', title:'French – Kids (5–15 yrs)', desc:'Songs, games, and stories in French. Your child will ask to come back!', link:'course.html?id=french' },
+    };
+
+    function openQuiz() {
+      _quizAnswers.q1 = _quizAnswers.q2 = _quizAnswers.q3 = null;
+      ['quiz-q1','quiz-q2','quiz-q3','quiz-result'].forEach((id,i) => {
+        document.getElementById(id).classList.toggle('hidden', i !== 0);
+      });
+      _updateQuizProgress(1);
+      document.getElementById('quiz-modal').classList.remove('hidden');
+    }
+    function closeQuiz() { document.getElementById('quiz-modal').classList.add('hidden'); }
+    function restartQuiz() { openQuiz(); }
+
+    function _updateQuizProgress(step) {
+      document.getElementById('quiz-progress-bar').style.width = (step / 3 * 100) + '%';
+      document.getElementById('quiz-step-label').textContent = `Step ${step} of 3`;
+      document.getElementById('quiz-step-label-ar').textContent = `خطوة ${step} من 3`;
+    }
+
+    function quizAnswer(q, val) {
+      _quizAnswers['q' + q] = val;
+      if (q === 1) {
+        document.getElementById('quiz-q1').classList.add('hidden');
+        document.getElementById('quiz-q2').classList.remove('hidden');
+        _updateQuizProgress(2);
+      } else if (q === 2) {
+        if (_quizAnswers.q1 === 'child') {
+          // Skip Q3 for child — go straight to language choice
+          document.getElementById('quiz-q2').classList.add('hidden');
+          document.getElementById('quiz-q3').classList.remove('hidden');
+          _updateQuizProgress(3);
+        } else {
+          document.getElementById('quiz-q2').classList.add('hidden');
+          document.getElementById('quiz-q3').classList.remove('hidden');
+          _updateQuizProgress(3);
+        }
+      } else if (q === 3) {
+        document.getElementById('quiz-q3').classList.add('hidden');
+        const key = `${_quizAnswers.q1}-${_quizAnswers.q2}-${val}`;
+        const r = _quizResults[key];
+        document.getElementById('quiz-result-emoji').textContent = r.emoji;
+        document.getElementById('quiz-result-title').textContent = r.title;
+        document.getElementById('quiz-result-desc').textContent = r.desc;
+        document.getElementById('quiz-result-link').href = r.link;
+        document.getElementById('quiz-progress-bar').style.width = '100%';
+        document.getElementById('quiz-step-label').textContent = 'Your result!';
+        document.getElementById('quiz-step-label-ar').textContent = 'نتيجتك!';
+        document.getElementById('quiz-result').classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('quiz-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeQuiz();
     });
   </script>
 </body>
