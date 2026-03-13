@@ -552,7 +552,10 @@
         vx: (Math.random() - 0.5) * 4, vy: 2 + Math.random() * 4,
         angle: Math.random() * 360, spin: (Math.random() - 0.5) * 6
       }));
+      const onHide = () => canvas.remove();
+      document.addEventListener('visibilitychange', onHide, { once: true });
       (function draw() {
+        if (!canvas.parentNode) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         let alive = false;
         pieces.forEach(p => {
