@@ -556,16 +556,17 @@
         vx: (Math.random() - 0.5) * 4, vy: 2 + Math.random() * 4,
         angle: Math.random() * 360, spin: (Math.random() - 0.5) * 6
       }));
-      const start = performance.now();
-      (function draw(now) {
+      (function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
         pieces.forEach(p => {
           p.x += p.vx; p.y += p.vy; p.angle += p.spin;
+          if (p.y < canvas.height + 20) alive = true;
           ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.angle * Math.PI / 180);
           ctx.fillStyle = p.color; ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h); ctx.restore();
         });
-        if (now - start < 3000) requestAnimationFrame(draw); else canvas.remove();
-      })(performance.now());
+        if (alive) requestAnimationFrame(draw); else canvas.remove();
+      })();
     }
 
     // Wrap submitEnrollment to add confetti after it runs
