@@ -431,7 +431,9 @@
 
         function showLessReviews() {
           renderReviews(_allReviews, false);
-          document.getElementById("reviews-heading").scrollIntoView({ behavior: "smooth", block: "start" });
+          const el = document.getElementById("reviews-heading");
+          const top = el.getBoundingClientRect().top + window.scrollY - 80;
+          window.scrollTo({ top, behavior: "smooth" });
         }
 
         async function loadReviews() {
