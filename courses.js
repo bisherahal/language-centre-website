@@ -222,7 +222,7 @@ function buildCourseCards() {
     const c = colorMap[course.color] || colorMap.blue;
 
     const popularBadge = course.popular
-      ? `<span class="absolute top-3 left-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">
+      ? `<span class="absolute top-3 ltr:right-3 rtl:left-3 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">
            <span class="lang-en">Popular</span><span class="lang-ar">الأكثر طلباً</span>
          </span>`
       : "";
