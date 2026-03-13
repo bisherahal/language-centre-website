@@ -52,7 +52,20 @@
 <body class="bg-gray-50 text-gray-800">
 <script>
   if (history.scrollRestoration) history.scrollRestoration = "manual";
-  window.addEventListener("load", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  window.addEventListener("load", () => {
+    const start = window.scrollY;
+    if (start === 0) return;
+    const duration = 1000;
+    const startTime = performance.now();
+    function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      window.scrollTo(0, start * (1 - ease(progress)));
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
 </script>
 
   <!-- NAVBAR -->
