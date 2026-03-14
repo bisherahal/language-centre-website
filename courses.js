@@ -292,20 +292,21 @@ function buildCourseCards() {
 // ============================================================
 // ENROLLMENT MODAL
 // ============================================================
-function openEnrollModal(courseIndex) {
+function openEnrollModal(courseIndex, isWaitlist = false) {
   const course = courses[courseIndex];
   const isRTL = document.getElementById("html-root").getAttribute("dir") === "rtl";
   const modal = document.getElementById("enroll-modal");
 
-  // Reset to form state (hide success, show form)
+  // Reset to form state
   document.getElementById("enroll-form-body").classList.remove("hidden");
   document.getElementById("enroll-success").classList.add("hidden");
 
   // Set title
   const courseName = isRTL ? course.nameAr : course.nameEn;
   const subtitle = isRTL ? (course.subtitleAr || "") : (course.subtitleEn || "");
-  document.getElementById("modal-title").textContent =
-    isRTL ? `التسجيل في ${courseName}` : `Enroll in ${courseName}`;
+  document.getElementById("modal-title").textContent = isWaitlist
+    ? (isRTL ? `قائمة انتظار — ${courseName}` : `Join Waitlist — ${courseName}`)
+    : (isRTL ? `التسجيل في ${courseName}` : `Enroll in ${courseName}`);
   const subtitleEl = document.getElementById("modal-subtitle");
   subtitleEl.textContent = subtitle;
   subtitleEl.classList.toggle("hidden", !subtitle);
@@ -318,7 +319,9 @@ function openEnrollModal(courseIndex) {
   // Reset submit button
   const btn = document.getElementById("enroll-submit-btn");
   btn.disabled = false;
-  btn.innerHTML = `<span class="lang-en">Submit Registration</span><span class="lang-ar">إرسال التسجيل</span>`;
+  btn.innerHTML = isWaitlist
+    ? `<span class="lang-en">Join Waitlist</span><span class="lang-ar">انضم لقائمة الانتظار</span>`
+    : `<span class="lang-en">Submit Registration</span><span class="lang-ar">إرسال التسجيل</span>`;
 
   // Clear fields
   ["enroll-name","enroll-phone","enroll-email","enroll-notes"].forEach(id => {
@@ -326,6 +329,7 @@ function openEnrollModal(courseIndex) {
   });
 
   modal.dataset.courseIndex = courseIndex;
+  modal.dataset.isWaitlist = isWaitlist ? "1" : "0";
   modal.classList.remove("hidden");
   modal.classList.add("flex");
   document.body.style.overflow = "hidden";
@@ -341,6 +345,7 @@ function closeEnrollModal() {
 function submitEnrollment() {
   const modal = document.getElementById("enroll-modal");
   const courseIndex = modal.dataset.courseIndex;
+  const isWaitlist = modal.dataset.isWaitlist === "1";
   const course = courses[courseIndex];
   const isRTL = document.getElementById("html-root").getAttribute("dir") === "rtl";
 
@@ -372,7 +377,8 @@ function submitEnrollment() {
     subtitle: course.subtitleEn || "",
     level, schedule, notes,
     date: new Date().toISOString(),
-    lang: isRTL ? "ar" : "en"
+    lang: isRTL ? "ar" : "en",
+    waitlist: isWaitlist ? "Yes" : "No"
   };
 
   // Send to Google Apps Script — no-cors so we can't read the response,
@@ -389,6 +395,12 @@ function submitEnrollment() {
   // Show success state
   document.getElementById("enroll-form-body").classList.add("hidden");
   document.getElementById("enroll-success").classList.remove("hidden");
+  if (isWaitlist) {
+    const t = document.getElementById("success-title");
+    const m = document.getElementById("success-msg");
+    if (t) t.innerHTML = `<span class="lang-en">You're on the waitlist!</span><span class="lang-ar">أنت في قائمة الانتظار!</span>`;
+    if (m) m.innerHTML = `<span class="lang-en">We'll contact you as soon as a spot opens up.</span><span class="lang-ar">سنتواصل معك فور تفرّغ مكان.</span>`;
+  }
 
   // 🎉 Confetti burst (no external library)
   _launchConfetti();
@@ -547,12 +559,19 @@ function renderSchedule(events) {
       </div>`;
     }).join("");
 
+    const isFull = spotsTotal !== null && spotsTotal !== undefined && (spotsTotal - spotsTaken) <= 0;
     const enrollBtn = courseIndex >= 0
-      ? `<button onclick="event.stopPropagation();openEnrollModal(${courseIndex})"
-           class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl text-white transition-colors"
-           style="background:#002395" onmouseover="this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
-           <span class="lang-en">Enroll</span><span class="lang-ar">سجّل</span>
-         </button>`
+      ? isFull
+        ? `<button onclick="event.stopPropagation();openEnrollModal(${courseIndex}, true)"
+             class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl text-white transition-colors"
+             style="background:#f59e0b" onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">
+             <span class="lang-en">Join Waitlist</span><span class="lang-ar">قائمة الانتظار</span>
+           </button>`
+        : `<button onclick="event.stopPropagation();openEnrollModal(${courseIndex})"
+             class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl text-white transition-colors"
+             style="background:#002395" onmouseover="this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
+             <span class="lang-en">Enroll</span><span class="lang-ar">سجّل</span>
+           </button>`
       : `<a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" onclick="event.stopPropagation()"
            class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white transition-colors">
            <span class="lang-en">Inquire</span><span class="lang-ar">استفسر</span>

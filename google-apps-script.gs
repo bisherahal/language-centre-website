@@ -165,7 +165,8 @@ function doPost(e) {
       payload.level    || "",
       payload.schedule || "",
       payload.notes    || "",
-      payload.lang     || "en"
+      payload.lang     || "en",
+      payload.waitlist || "No"
     ]);
 
     // Auto-increment TakenSpots in "Hexagon Spots" sheet
