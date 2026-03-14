@@ -153,6 +153,8 @@ function doPost(e) {
         "Level", "Schedule", "Notes", "Lang", "Status"
       ]);
     }
+    // Apply dropdown validation on Status column (col 12)
+    _applyStatusDropdown(leads);
 
     leads.appendRow([
       payload.date     || new Date().toISOString(),
@@ -199,6 +201,20 @@ function doPost(e) {
 // ============================================================
 
 const CALENDAR_ID = "centrehexagon@gmail.com"; // Your calendar email
+
+// Run this ONCE manually to add the dropdown to existing Leads sheet
+function setupLeadsDropdown() {
+  const leads = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Leads");
+  if (leads) _applyStatusDropdown(leads);
+}
+
+function _applyStatusDropdown(sheet) {
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(["Pending", "Confirmed", "Cancelled", "No-show"], true)
+    .setAllowInvalid(false)
+    .build();
+  sheet.getRange(2, 12, sheet.getMaxRows() - 1, 1).setDataValidation(rule);
+}
 
 // ============================================================
 // AUTO-INCREMENT SPOTS WHEN STATUS CHANGED TO "Confirmed"
