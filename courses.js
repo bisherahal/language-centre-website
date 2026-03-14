@@ -687,48 +687,6 @@ document.addEventListener("DOMContentLoaded", () => {
   observer.observe(document.getElementById("html-root"), { attributes: true, attributeFilter: ["dir"] });
 });
 
-// ============================================================
-// SOCIAL PROOF TOASTS
-// ============================================================
-(function() {
-  const _toasts = [
-    { name: "Ahmad K.",   cc: "jo", course: "English – Advanced" },
-    { name: "Sara M.",    cc: "jo", course: "French – A1" },
-    { name: "Rania T.",   cc: "jo", course: "English – IELTS" },
-    { name: "Omar H.",    cc: "jo", course: "French – Conversation" },
-    { name: "Nour A.",    cc: "jo", course: "English – Kids" },
-    { name: "Yousef B.",  cc: "jo", course: "French – B1" },
-    { name: "Lina S.",    cc: "jo", course: "English – Beginner" },
-    { name: "Maya R.",    cc: "jo", course: "French – DELF A2" },
-    { name: "Kareem N.",  cc: "jo", course: "English – Conversation" },
-    { name: "Dina W.",    cc: "jo", course: "French – A2" },
-  ];
-  let _ti = 0;
-
-  function _showToast() {
-    const t = _toasts[_ti % _toasts.length];
-    _ti++;
-    const el = document.createElement("div");
-    el.style.cssText = "position:fixed;bottom:24px;left:24px;z-index:9000;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.13);padding:12px 16px;display:flex;align-items:center;gap:12px;max-width:280px;transform:translateX(-120%);transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);border-left:4px solid #002395;";
-    el.innerHTML = `
-      <img src="https://flagcdn.com/24x18/${t.cc}.png" style="border-radius:3px;flex-shrink:0" alt="">
-      <div>
-        <div style="font-weight:700;font-size:13px;color:#111">${t.name}</div>
-        <div style="font-size:12px;color:#555">just enrolled in <span style="color:#002395;font-weight:600">${t.course}</span></div>
-      </div>`;
-    document.body.appendChild(el);
-    requestAnimationFrame(() => { el.style.transform = "translateX(0)"; });
-    setTimeout(() => {
-      el.style.transform = "translateX(-120%)";
-      setTimeout(() => el.remove(), 400);
-    }, 4000);
-  }
-
-  window.addEventListener("load", () => {
-    setTimeout(_showToast, 5000);
-    setInterval(_showToast, 45000);
-  });
-})();
 
 // ============================================================
 // PAGE TRANSITIONS — fade in on load, fade out on navigate
