@@ -515,10 +515,10 @@
       window.addEventListener("load", loadGallery);
       window.addEventListener("load", function() {
         const list = document.getElementById("teachers-list");
-        if (!list || typeof _courses === "undefined") return;
+        if (!list || typeof courses === "undefined") return;
         const seen = new Set();
         const teachers = [];
-        _courses.forEach(c => {
+        courses.forEach(c => {
           if (c.teacher && c.teacher.nameEn && !seen.has(c.teacher.nameEn)) {
             seen.add(c.teacher.nameEn);
             teachers.push({ ...c.teacher, lang: c.nameEn });
