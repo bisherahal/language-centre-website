@@ -579,11 +579,14 @@
       })();
     }
 
-    // Wrap submitEnrollment to add confetti after it runs
+    // Wrap submitEnrollment to add confetti only on success
     const _origSubmit = submitEnrollment;
     submitEnrollment = function() {
       _origSubmit.apply(this, arguments);
-      setTimeout(_launchConfetti, 100);
+      setTimeout(() => {
+        const success = document.getElementById("modal-success") || document.getElementById("enroll-success");
+        if (success && !success.classList.contains("hidden")) _launchConfetti();
+      }, 150);
     };
   </script>
 
