@@ -361,6 +361,15 @@ function submitEnrollment() {
     return;
   }
 
+  // Check for duplicate enrollment (same phone + same course)
+  const _enrollKey = `enrolled_${course.id}_${phone.replace(/\D/g,"")}`;
+  if (localStorage.getItem(_enrollKey)) {
+    alert(isRTL
+      ? "لقد سجّلت في هذه الدورة مسبقاً. سنتواصل معك قريباً."
+      : "You've already enrolled in this course. We'll be in touch soon.");
+    return;
+  }
+
   // Show loading state
   const btn = document.getElementById("enroll-submit-btn");
   btn.disabled = true;
@@ -391,6 +400,9 @@ function submitEnrollment() {
       body: JSON.stringify(payload)
     }).catch(() => {});
   }
+
+  // Remember enrollment to prevent duplicates
+  localStorage.setItem(_enrollKey, "1");
 
   // Show success state
   document.getElementById("enroll-form-body").classList.add("hidden");
