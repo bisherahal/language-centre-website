@@ -326,9 +326,22 @@
         <span class="lang-en">Life at Hexagon</span>
         <span class="lang-ar">الحياة في إكزاكون</span>
       </h2>
-      <!-- Grid -->
-      <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 gap-3">
-        <!-- loaded by JS -->
+      <!-- Carousel -->
+      <div class="relative">
+        <div id="gallery-track" class="grid grid-cols-3 gap-3 overflow-hidden"></div>
+        <!-- Arrows -->
+        <button id="gallery-prev" onclick="galleryNav(-1)"
+          class="hidden absolute -left-5 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-[#002395] font-bold text-lg hover:bg-[#002395] hover:text-white transition z-10">‹</button>
+        <button id="gallery-next" onclick="galleryNav(1)"
+          class="hidden absolute -right-5 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-[#002395] font-bold text-lg hover:bg-[#002395] hover:text-white transition z-10">›</button>
+      </div>
+      <!-- Show more -->
+      <div id="gallery-show-more" class="hidden mt-8 text-center">
+        <button onclick="galleryShowAll()"
+          class="px-6 py-2.5 rounded-full border-2 border-[#002395] text-[#002395] font-semibold text-sm hover:bg-[#002395] hover:text-white transition">
+          <span class="lang-en">View All Photos</span>
+          <span class="lang-ar">عرض كل الصور</span>
+        </button>
       </div>
       <div id="gallery-empty" class="hidden text-center text-gray-400 py-16 text-sm">
         <span class="lang-en">Photos coming soon…</span>
@@ -366,23 +379,64 @@
 
       document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
 
+      let _galleryPhotos = [], _galleryPage = 0, _galleryPerPage = 3, _galleryExpanded = false;
+
+      function _galleryCard(p) {
+        return `<div class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square bg-gray-200"
+             onclick="openLightbox('${p.url}', '${(p.caption||"").replace(/'/g,"\\'")}')">
+          <img src="${p.url}" alt="${p.caption || "Hexagon Centre"}"
+               class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+               onerror="this.parentElement.style.display='none'" />
+          ${p.caption ? `<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <p class="text-white text-xs font-medium">${p.caption}</p></div>` : ""}
+        </div>`;
+      }
+
+      function _renderPage() {
+        const track = document.getElementById("gallery-track");
+        const start = _galleryPage * _galleryPerPage;
+        const slice = _galleryPhotos.slice(start, start + _galleryPerPage);
+        track.style.opacity = "0";
+        setTimeout(() => {
+          track.innerHTML = slice.map(_galleryCard).join("");
+          track.style.opacity = "1";
+        }, 200);
+        document.getElementById("gallery-prev").classList.toggle("hidden", _galleryPage === 0);
+        document.getElementById("gallery-next").classList.toggle("hidden", start + _galleryPerPage >= _galleryPhotos.length);
+      }
+
+      function galleryNav(dir) {
+        const max = Math.ceil(_galleryPhotos.length / _galleryPerPage) - 1;
+        _galleryPage = Math.max(0, Math.min(_galleryPage + dir, max));
+        _renderPage();
+      }
+
+      function galleryShowAll() {
+        const track = document.getElementById("gallery-track");
+        track.className = "grid grid-cols-2 md:grid-cols-3 gap-3";
+        track.innerHTML = _galleryPhotos.map(_galleryCard).join("");
+        document.getElementById("gallery-prev").classList.add("hidden");
+        document.getElementById("gallery-next").classList.add("hidden");
+        document.getElementById("gallery-show-more").classList.add("hidden");
+        _galleryExpanded = true;
+      }
+
       function renderGallery(photos) {
-        const grid = document.getElementById("gallery-grid");
-        const empty = document.getElementById("gallery-empty");
         if (!photos || photos.length === 0) {
           document.getElementById("gallery").classList.add("hidden");
           return;
         }
-        grid.innerHTML = photos.map(p => `
-          <div class="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square bg-gray-200"
-               onclick="openLightbox('${p.url}', '${(p.caption||"").replace(/'/g,"\\'")}')">
-            <img src="${p.url}" alt="${p.caption || "Hexagon Centre"}"
-                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                 onerror="this.parentElement.style.display='none'" />
-            ${p.caption ? `<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-              <p class="text-white text-xs font-medium">${p.caption}</p>
-            </div>` : ""}
-          </div>`).join("");
+        _galleryPhotos = photos;
+        _galleryPage = 0;
+        const track = document.getElementById("gallery-track");
+        track.style.transition = "opacity 0.2s ease";
+        _renderPage();
+        document.getElementById("gallery-prev").classList.remove("hidden");
+        document.getElementById("gallery-next").classList.remove("hidden");
+        _renderPage(); // re-run to apply arrow visibility correctly
+        if (photos.length > _galleryPerPage) {
+          document.getElementById("gallery-show-more").classList.remove("hidden");
+        }
       }
 
       async function loadGallery() {
@@ -401,6 +455,40 @@
       window.addEventListener("load", loadGallery);
     </script>
   </section>
+
+  <!-- DID YOU KNOW -->
+  <section class="py-10 px-4 bg-[#002395]">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="text-white/50 text-xs font-bold uppercase tracking-widest mb-3 lang-en">Did you know?</p>
+      <p class="text-white/50 text-xs font-bold uppercase tracking-widest mb-3 lang-ar">هل تعلم؟</p>
+      <div id="fact-text" class="text-white text-lg md:text-xl font-semibold leading-relaxed" style="transition:opacity 0.5s ease,transform 0.5s ease"></div>
+    </div>
+  </section>
+  <script>
+    const _facts = [
+      { en: "🇫🇷 French is the official language of 29 countries — more than any other European language.", ar: "🇫🇷 الفرنسية هي اللغة الرسمية في 29 دولة — أكثر من أي لغة أوروبية أخرى." },
+      { en: "🧠 Being bilingual can delay Alzheimer's by up to 5 years.", ar: "🧠 التحدث بلغتين يمكن أن يؤخر الزهايمر لمدة تصل إلى 5 سنوات." },
+      { en: "🇬🇧 English borrows nearly 30% of its vocabulary directly from French.", ar: "🇬🇧 اللغة الإنجليزية تستعير قرابة 30% من مفرداتها من الفرنسية." },
+      { en: "🌍 There are over 7,000 languages spoken in the world today.", ar: "🌍 يُتحدث اليوم بأكثر من 7,000 لغة حول العالم." },
+      { en: "👶 Babies can distinguish between languages before they can speak.", ar: "👶 الأطفال الرضّع يستطيعون التمييز بين اللغات قبل أن يتعلموا الكلام." },
+      { en: "🏆 IELTS is taken by over 3.5 million people every year worldwide.", ar: "🏆 يؤدي أكثر من 3.5 مليون شخص اختبار IELTS كل عام حول العالم." },
+      { en: "📜 French was the official language of England for over 300 years.", ar: "📜 كانت الفرنسية اللغة الرسمية لإنجلترا لأكثر من 300 سنة." },
+      { en: "🌱 Learning a new language rewires your brain and boosts creativity.", ar: "🌱 تعلّم لغة جديدة يُعيد برمجة دماغك ويعزز إبداعك." },
+    ];
+    let _fi = 0;
+    function _showFact() {
+      const el = document.getElementById("fact-text");
+      if (!el) return;
+      const isRTL = document.getElementById("html-root").getAttribute("dir") === "rtl";
+      el.style.opacity = "0"; el.style.transform = "translateY(10px)";
+      setTimeout(() => {
+        el.textContent = isRTL ? _facts[_fi].ar : _facts[_fi].en;
+        el.style.opacity = "1"; el.style.transform = "translateY(0)";
+        _fi = (_fi + 1) % _facts.length;
+      }, 500);
+    }
+    window.addEventListener("load", () => { _showFact(); setInterval(_showFact, 5000); });
+  </script>
 
   <!-- ABOUT -->
   <section id="about" class="py-14 px-4 bg-white">
