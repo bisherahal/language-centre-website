@@ -528,8 +528,8 @@ function renderSchedule(events) {
             <div class="h-2 rounded-full" style="width:${pct}%;background:${spotsColor}"></div>
           </div>
           <span class="text-xs font-bold whitespace-nowrap" style="color:${spotsColor}">
-            <span class="lang-en">${available} of ${spotsTotal} spots left${available <= 2 ? " — Almost full!" : ""}</span>
-            <span class="lang-ar">${available} من ${spotsTotal} أماكن متبقية${available <= 2 ? " — يكاد يمتلئ!" : ""}</span>
+            <span class="lang-en">${available <= 0 ? "Class Full!" : `${available} of ${spotsTotal} spots left${available <= 2 ? " — Almost full!" : ""}`}</span>
+            <span class="lang-ar">${available <= 0 ? "اكتمل الفصل!" : `${available} من ${spotsTotal} أماكن متبقية${available <= 2 ? " — يكاد يمتلئ!" : ""}`}</span>
           </span>
         </div>`;
     }
