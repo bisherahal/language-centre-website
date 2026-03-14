@@ -149,6 +149,16 @@ const GOOGLE_CALENDAR_API_KEY = "AIzaSyDJgMXba4cXhp5PSSXUxvReyKOXKi8baMk";
 //   2. Copy the web app URL and paste it below
 // ============================================================
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwus4Gyn1876BG_ohT6bQwz2CDlpJuFBd8voHW2eyC2riYD_v4BL1NLQIqiCGyZB9S3bQ/exec"
+
+// ============================================================
+// GALLERY FALLBACK — shown when no photos are in the Gallery sheet yet.
+// Replace these with real Google Drive thumbnail URLs once you have photos.
+// How to get a Drive thumbnail URL:
+//   Right-click photo in Drive → Get link → copy the file ID from the URL
+//   Then use: https://drive.google.com/thumbnail?id=YOUR_FILE_ID&sz=w800
+// ============================================================
+const GALLERY_FALLBACK = [];
+
 let _cachedScheduleEvents = null;
 let _activeFilter = "all";
 
@@ -361,14 +371,6 @@ function submitEnrollment() {
     return;
   }
 
-  // Check for duplicate enrollment (same phone + same course)
-  const _enrollKey = `enrolled_${course.id}_${phone.replace(/\D/g,"")}`;
-  if (localStorage.getItem(_enrollKey)) {
-    alert(isRTL
-      ? "لقد سجّلت في هذه الدورة مسبقاً. سنتواصل معك قريباً."
-      : "You've already enrolled in this course. We'll be in touch soon.");
-    return;
-  }
 
   // Show loading state
   const btn = document.getElementById("enroll-submit-btn");
@@ -400,9 +402,6 @@ function submitEnrollment() {
       body: JSON.stringify(payload)
     }).catch(() => {});
   }
-
-  // Remember enrollment to prevent duplicates
-  localStorage.setItem(_enrollKey, "1");
 
   // Show success state
   document.getElementById("enroll-form-body").classList.add("hidden");

@@ -486,7 +486,7 @@
 
       function renderGallery(photos) {
         if (!photos || photos.length === 0) {
-          document.getElementById("gallery").classList.add("hidden");
+          document.getElementById("gallery-empty").classList.remove("hidden");
           return;
         }
         _galleryPhotos = photos;
@@ -897,7 +897,7 @@
     </div>
   </div>
 
-  <script src="courses.js?v=4"></script>
+  <script src="courses.js?v=5"></script>
   <script>
     function toggleLang() {
       const html = document.getElementById('html-root');
