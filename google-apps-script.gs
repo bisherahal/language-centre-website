@@ -150,7 +150,7 @@ function doPost(e) {
       leads.appendRow([
         "Date", "Name", "Phone", "Email",
         "Course", "CourseId", "Subtitle",
-        "Level", "Schedule", "Notes", "Lang"
+        "Level", "Schedule", "Notes", "Lang", "Status"
       ]);
     }
 
@@ -166,29 +166,8 @@ function doPost(e) {
       payload.schedule || "",
       payload.notes    || "",
       payload.lang     || "en",
-      payload.waitlist || "No"
+      "Pending"  // Status — you change this to Confirmed / Cancelled / No-show manually
     ]);
-
-    // Auto-increment TakenSpots in "Hexagon Spots" sheet
-    if (payload.courseId) {
-      const spotsSheet = ss.getSheetByName("Hexagon Spots");
-      if (spotsSheet) {
-        const spotsData = spotsSheet.getDataRange().getValues();
-        const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-        const sentId = norm(payload.courseId);
-        const sentLevel = norm(payload.level || '');
-        for (let i = 1; i < spotsData.length; i++) {
-          const rowId = norm(spotsData[i][0]);
-          // Exact match, or courseId+level combo match, or row starts with courseId and contains level prefix
-          if (rowId === sentId ||
-              rowId === sentId + '-' + sentLevel ||
-              (rowId.startsWith(sentId + '-') && sentLevel && rowId.includes(sentLevel.split('-')[0]))) {
-            spotsSheet.getRange(i + 1, 2).setValue(Number(spotsData[i][1]) + 1);
-            break;
-          }
-        }
-      }
-    }
 
     return jsonResponse({ status: "ok" });
   } catch (e) {
@@ -220,6 +199,48 @@ function doPost(e) {
 // ============================================================
 
 const CALENDAR_ID = "centrehexagon@gmail.com"; // Your calendar email
+
+// ============================================================
+// AUTO-INCREMENT SPOTS WHEN STATUS CHANGED TO "Confirmed"
+// Set this as an installable trigger:
+//   Apps Script → Triggers (clock icon) → Add Trigger
+//   Function: onLeadsEdit | Event: From spreadsheet | Type: On edit
+// ============================================================
+function onLeadsEdit(e) {
+  const sheet = e.range.getSheet();
+  if (sheet.getName() !== "Leads") return;
+
+  const col = e.range.getColumn();
+  const row = e.range.getRow();
+
+  // Status column is column 12 (L)
+  if (col !== 12 || row < 2) return;
+  if (String(e.value).trim().toLowerCase() !== "confirmed") return;
+
+  // Get courseId and level from same row
+  const courseId = String(sheet.getRange(row, 6).getValue()).trim();
+  const level    = String(sheet.getRange(row, 8).getValue()).trim();
+  if (!courseId) return;
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const spotsSheet = ss.getSheetByName("Hexagon Spots");
+  if (!spotsSheet) return;
+
+  const spotsData = spotsSheet.getDataRange().getValues();
+  const norm = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+  const sentId    = norm(courseId);
+  const sentLevel = norm(level);
+
+  for (let i = 1; i < spotsData.length; i++) {
+    const rowId = norm(spotsData[i][0]);
+    if (rowId === sentId ||
+        rowId === sentId + '-' + sentLevel ||
+        (rowId.startsWith(sentId + '-') && sentLevel && rowId.includes(sentLevel.split('-')[0]))) {
+      spotsSheet.getRange(i + 1, 2).setValue(Number(spotsData[i][1]) + 1);
+      break;
+    }
+  }
+}
 
 function createCalendarEvents() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
