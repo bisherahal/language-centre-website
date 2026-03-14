@@ -517,18 +517,18 @@
   </section>
 
   <!-- DID YOU KNOW -->
-  <section class="py-10 px-4 bg-[#002395]">
-    <div class="max-w-3xl mx-auto text-center">
+  <section class="py-10 px-4 bg-[#002395]" style="min-height:110px;display:flex;align-items:center">
+    <div class="max-w-3xl mx-auto text-center w-full">
       <p class="text-white/50 text-xs font-bold uppercase tracking-widest mb-3 lang-en">Did you know?</p>
       <p class="text-white/50 text-xs font-bold uppercase tracking-widest mb-3 lang-ar">هل تعلم؟</p>
-      <div id="fact-text" class="text-white text-lg md:text-xl font-semibold leading-relaxed" style="transition:opacity 0.5s ease,transform 0.5s ease;min-height:3.5rem;display:flex;align-items:center;justify-content:center"></div>
+      <div id="fact-text" class="text-white text-lg md:text-xl font-semibold leading-relaxed" style="transition:opacity 0.5s ease,transform 0.5s ease"></div>
     </div>
   </section>
   <script>
     const _facts = [
-      { en: "🇫🇷 French is the official language of 29 countries — more than any other European language.", ar: "🇫🇷 الفرنسية هي اللغة الرسمية في 29 دولة — أكثر من أي لغة أوروبية أخرى." },
+      { en: "<img src='https://flagcdn.com/20x15/fr.png' style='display:inline;vertical-align:middle;margin-right:6px;border-radius:2px'> French is the official language of 29 countries — more than any other European language.", ar: "<img src='https://flagcdn.com/20x15/fr.png' style='display:inline;vertical-align:middle;margin-left:6px;border-radius:2px'> الفرنسية هي اللغة الرسمية في 29 دولة — أكثر من أي لغة أوروبية أخرى." },
       { en: "🧠 Being bilingual can delay Alzheimer's by up to 5 years.", ar: "🧠 التحدث بلغتين يمكن أن يؤخر الزهايمر لمدة تصل إلى 5 سنوات." },
-      { en: "🇬🇧 English borrows nearly 30% of its vocabulary directly from French.", ar: "🇬🇧 اللغة الإنجليزية تستعير قرابة 30% من مفرداتها من الفرنسية." },
+      { en: "<img src='https://flagcdn.com/20x15/gb.png' style='display:inline;vertical-align:middle;margin-right:6px;border-radius:2px'> English borrows nearly 30% of its vocabulary directly from French.", ar: "<img src='https://flagcdn.com/20x15/gb.png' style='display:inline;vertical-align:middle;margin-left:6px;border-radius:2px'> اللغة الإنجليزية تستعير قرابة 30% من مفرداتها من الفرنسية." },
       { en: "🌍 There are over 7,000 languages spoken in the world today.", ar: "🌍 يُتحدث اليوم بأكثر من 7,000 لغة حول العالم." },
       { en: "👶 Babies can distinguish between languages before they can speak.", ar: "👶 الأطفال الرضّع يستطيعون التمييز بين اللغات قبل أن يتعلموا الكلام." },
       { en: "🏆 IELTS is taken by over 3.5 million people every year worldwide.", ar: "🏆 يؤدي أكثر من 3.5 مليون شخص اختبار IELTS كل عام حول العالم." },
@@ -542,7 +542,7 @@
       const isRTL = document.getElementById("html-root").getAttribute("dir") === "rtl";
       el.style.opacity = "0"; el.style.transform = "translateY(10px)";
       setTimeout(() => {
-        el.textContent = isRTL ? _facts[_fi].ar : _facts[_fi].en;
+        el.innerHTML = isRTL ? _facts[_fi].ar : _facts[_fi].en;
         el.style.opacity = "1"; el.style.transform = "translateY(0)";
         _fi = (_fi + 1) % _facts.length;
       }, 500);
