@@ -11,6 +11,10 @@
   <style>
     :root { --primary: #002395; --accent: #ED2939; }
     body { font-family: 'Inter', 'Noto Sans Arabic', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     html[dir="rtl"] body { font-family: 'Noto Sans Arabic', 'Inter', sans-serif; }
     .lang-en { display: block; }
     .lang-ar { display: none; }
@@ -336,12 +340,19 @@
         <button onclick="galleryNav(1)" id="gallery-next"
           class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center text-[#002395] font-bold text-xl hover:bg-[#002395] hover:text-white transition">›</button>
       </div>
-      <!-- Show more -->
-      <div id="gallery-show-more" class="hidden mt-6 text-center">
+      <!-- Show more / Show less -->
+      <div class="hidden mt-6 text-center flex justify-center gap-3" id="gallery-show-more">
         <button onclick="galleryShowAll()"
           class="px-6 py-2.5 rounded-full border-2 border-[#002395] text-[#002395] font-semibold text-sm hover:bg-[#002395] hover:text-white transition">
           <span class="lang-en">View All Photos</span>
           <span class="lang-ar">عرض كل الصور</span>
+        </button>
+      </div>
+      <div class="hidden mt-6 text-center" id="gallery-show-less">
+        <button onclick="galleryCollapse()"
+          class="px-6 py-2.5 rounded-full border-2 border-gray-400 text-gray-500 font-semibold text-sm hover:bg-gray-100 transition">
+          <span class="lang-en">Show Less</span>
+          <span class="lang-ar">عرض أقل</span>
         </button>
       </div>
       <div id="gallery-empty" class="hidden text-center text-gray-400 py-16 text-sm">
@@ -455,6 +466,22 @@
         track.innerHTML = _galleryPhotos.map(_galleryCard).join("");
         document.getElementById("gallery-controls").classList.add("hidden");
         document.getElementById("gallery-show-more").classList.add("hidden");
+        document.getElementById("gallery-show-less").classList.remove("hidden");
+      }
+
+      function galleryCollapse() {
+        _galleryPage = 0;
+        const track = document.getElementById("gallery-track");
+        track.className = "grid grid-cols-3 gap-3";
+        track.style.transition = "opacity 0.3s ease";
+        _renderPage();
+        document.getElementById("gallery-controls").classList.remove("hidden");
+        document.getElementById("gallery-show-more").classList.remove("hidden");
+        document.getElementById("gallery-show-less").classList.add("hidden");
+        _resetAutoRotate();
+        const heading = document.getElementById("gallery").querySelector("h2");
+        const top = heading.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
       }
 
       function renderGallery(photos) {
