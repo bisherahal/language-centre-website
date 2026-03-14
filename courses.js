@@ -559,19 +559,12 @@ function renderSchedule(events) {
       </div>`;
     }).join("");
 
-    const isFull = spotsTotal !== null && spotsTotal !== undefined && (spotsTotal - spotsTaken) <= 0;
     const enrollBtn = courseIndex >= 0
-      ? isFull
-        ? `<button onclick="event.stopPropagation();openEnrollModal(${courseIndex}, true)"
-             class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl text-white transition-colors"
-             style="background:#f59e0b" onmouseover="this.style.background='#d97706'" onmouseout="this.style.background='#f59e0b'">
-             <span class="lang-en">Join Waitlist</span><span class="lang-ar">قائمة الانتظار</span>
-           </button>`
-        : `<button onclick="event.stopPropagation();openEnrollModal(${courseIndex})"
-             class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl text-white transition-colors"
-             style="background:#002395" onmouseover="this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
-             <span class="lang-en">Enroll</span><span class="lang-ar">سجّل</span>
-           </button>`
+      ? `<button onclick="event.stopPropagation();openEnrollModal(${courseIndex})"
+           class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl text-white transition-colors"
+           style="background:#002395" onmouseover="this.style.background='#001a6e'" onmouseout="this.style.background='#002395'">
+           <span class="lang-en">Enroll</span><span class="lang-ar">سجّل</span>
+         </button>`
       : `<a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" onclick="event.stopPropagation()"
            class="shrink-0 text-xs font-bold px-4 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white transition-colors">
            <span class="lang-en">Inquire</span><span class="lang-ar">استفسر</span>
