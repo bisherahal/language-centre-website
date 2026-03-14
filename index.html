@@ -352,23 +352,37 @@
 
     <!-- Lightbox -->
     <div id="lightbox" class="fixed inset-0 bg-black/80 z-50 hidden items-center justify-center p-4" onclick="closeLightbox()">
-      <button class="absolute top-4 right-4 text-white text-3xl font-bold leading-none" onclick="closeLightbox()">✕</button>
-      <img id="lightbox-img" src="" alt="" class="w-[90vw] h-[90vh] rounded-xl object-contain" onclick="event.stopPropagation()" />
+      <button class="absolute top-4 right-4 text-white text-3xl font-bold leading-none z-10" onclick="closeLightbox()">✕</button>
+      <button class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-5xl font-bold leading-none z-10 hover:text-gray-300" onclick="event.stopPropagation();lbNav(-1)">‹</button>
+      <button class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-5xl font-bold leading-none z-10 hover:text-gray-300" onclick="event.stopPropagation();lbNav(1)">›</button>
+      <img id="lightbox-img" src="" alt="" class="max-w-[85vw] max-h-[85vh] rounded-xl object-contain" onclick="event.stopPropagation()" />
       <p id="lightbox-caption" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm bg-black/50 px-4 py-1 rounded-full"></p>
     </div>
 
     <script>
       const GALLERY_FALLBACK = []; // no fallback photos — hides section if sheet is empty
 
+      let _lbIndex = 0;
       function openLightbox(src, caption) {
+        _lbIndex = _galleryPhotos.findIndex(p => p.url === src);
+        if (_lbIndex === -1) _lbIndex = 0;
+        _showLightboxPhoto(_lbIndex);
+      }
+      function _showLightboxPhoto(i) {
+        const p = _galleryPhotos[i];
+        if (!p) return;
         const lb = document.getElementById("lightbox");
-        document.getElementById("lightbox-img").src = src;
+        document.getElementById("lightbox-img").src = p.url;
         const cap = document.getElementById("lightbox-caption");
-        cap.textContent = caption || "";
-        cap.classList.toggle("hidden", !caption);
+        cap.textContent = p.caption || "";
+        cap.classList.toggle("hidden", !p.caption);
         lb.classList.remove("hidden");
         lb.classList.add("flex");
         document.body.style.overflow = "hidden";
+      }
+      function lbNav(dir) {
+        _lbIndex = (_lbIndex + dir + _galleryPhotos.length) % _galleryPhotos.length;
+        _showLightboxPhoto(_lbIndex);
       }
 
       function closeLightbox() {
@@ -378,7 +392,11 @@
         document.body.style.overflow = "";
       }
 
-      document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+      document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") lbNav(1);
+        if (e.key === "ArrowLeft") lbNav(-1);
+      });
 
       let _galleryPhotos = [], _galleryPage = 0, _galleryPerPage = 3, _galleryTimer = null;
 
