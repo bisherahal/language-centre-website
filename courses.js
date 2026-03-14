@@ -150,15 +150,6 @@ const GOOGLE_CALENDAR_API_KEY = "AIzaSyDJgMXba4cXhp5PSSXUxvReyKOXKi8baMk";
 // ============================================================
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwus4Gyn1876BG_ohT6bQwz2CDlpJuFBd8voHW2eyC2riYD_v4BL1NLQIqiCGyZB9S3bQ/exec"
 
-// ============================================================
-// GALLERY FALLBACK — shown when no photos are in the Gallery sheet yet.
-// Replace these with real Google Drive thumbnail URLs once you have photos.
-// How to get a Drive thumbnail URL:
-//   Right-click photo in Drive → Get link → copy the file ID from the URL
-//   Then use: https://drive.google.com/thumbnail?id=YOUR_FILE_ID&sz=w800
-// ============================================================
-const GALLERY_FALLBACK = [];
-
 let _cachedScheduleEvents = null;
 let _activeFilter = "all";
 
