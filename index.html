@@ -513,6 +513,28 @@
       }
 
       window.addEventListener("load", loadGallery);
+      window.addEventListener("load", function() {
+        const list = document.getElementById("teachers-list");
+        if (!list || typeof _courses === "undefined") return;
+        const seen = new Set();
+        const teachers = [];
+        _courses.forEach(c => {
+          if (c.teacher && c.teacher.name && !seen.has(c.teacher.name)) {
+            seen.add(c.teacher.name);
+            teachers.push({ ...c.teacher, lang: c.nameEn });
+          }
+        });
+        list.innerHTML = teachers.map(t => `
+          <div class="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+                 style="background:${t.color || '#002395'}">${t.initials || t.name.slice(0,2).toUpperCase()}</div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-900 text-sm">${t.name}</p>
+              <p class="text-gray-500 text-xs">${t.exp || ""}</p>
+            </div>
+            <span class="text-xs font-medium text-[#002395] bg-[#002395]/10 px-2.5 py-1 rounded-full shrink-0">${t.lang}</span>
+          </div>`).join("");
+      });
     </script>
   </section>
 
@@ -591,6 +613,15 @@
               <span class="lang-en">Official Certificates</span><span class="lang-ar">شهادات رسمية</span>
             </span>
           </div>
+        </div>
+
+        <!-- Meet Our Teachers -->
+        <div class="mt-10">
+          <h3 class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">
+            <span class="lang-en">Meet Our Teachers</span>
+            <span class="lang-ar">تعرف على معلمينا</span>
+          </h3>
+          <div id="teachers-list" class="flex flex-col gap-3"></div>
         </div>
       </div>
       <!-- Testimonials — loaded dynamically from Google Sheet, fallback to hardcoded -->
