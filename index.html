@@ -519,18 +519,19 @@
         const seen = new Set();
         const teachers = [];
         _courses.forEach(c => {
-          if (c.teacher && c.teacher.name && !seen.has(c.teacher.name)) {
-            seen.add(c.teacher.name);
+          if (c.teacher && c.teacher.nameEn && !seen.has(c.teacher.nameEn)) {
+            seen.add(c.teacher.nameEn);
             teachers.push({ ...c.teacher, lang: c.nameEn });
           }
         });
+        const isRTL = document.getElementById("html-root").getAttribute("dir") === "rtl";
         list.innerHTML = teachers.map(t => `
           <div class="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3">
             <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                 style="background:${t.color || '#002395'}">${t.initials || t.name.slice(0,2).toUpperCase()}</div>
+                 style="background:${t.avatarColor || '#002395'}">${t.initials}</div>
             <div class="flex-1 min-w-0">
-              <p class="font-semibold text-gray-900 text-sm">${t.name}</p>
-              <p class="text-gray-500 text-xs">${t.exp || ""}</p>
+              <p class="font-semibold text-gray-900 text-sm">${isRTL ? t.nameAr : t.nameEn}</p>
+              <p class="text-gray-500 text-xs">${isRTL ? t.expAr : t.expEn}</p>
             </div>
             <span class="text-xs font-medium text-[#002395] bg-[#002395]/10 px-2.5 py-1 rounded-full shrink-0">${t.lang}</span>
           </div>`).join("");
