@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hexagon Centre — Admin</title>
+  <script src="courses.js?v=4"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; color: #1e293b; min-height: 100vh; }
+
+    /* ── Login ── */
+    #login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: linear-gradient(135deg, #002395 0%, #7c3aed 100%);
+    }
+    .login-card {
+      background: #fff; border-radius: 16px; padding: 40px 48px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25); text-align: center; width: 360px;
+    }
+    .login-card .logo {
+      font-size: 2rem; font-weight: 800; color: #002395; margin-bottom: 4px;
+    }
+    .login-card p { color: #64748b; margin-bottom: 28px; font-size: .9rem; }
+    .login-card input {
+      width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0;
+      border-radius: 10px; font-size: 1rem; margin-bottom: 12px; outline: none;
+      transition: border-color .2s;
+    }
+    .login-card input:focus { border-color: #002395; }
+    .login-card button {
+      width: 100%; padding: 12px; background: #002395; color: #fff;
+      border: none; border-radius: 10px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background .2s;
+    }
+    .login-card button:hover { background: #001a70; }
+    .login-error { color: #dc2626; font-size: .85rem; margin-top: 8px; }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; }
+
+    header {
+      background: #002395; color: #fff; padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between; height: 60px;
+      position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,35,.3);
+    }
+    header .brand { font-size: 1.2rem; font-weight: 700; }
+    header .logout {
+      background: rgba(255,255,255,.15); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: .85rem;
+    }
+    header .logout:hover { background: rgba(255,255,255,.25); }
+
+    .page { max-width: 1300px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ── Stat cards ── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: #fff; border-radius: 14px; padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06); border-left: 4px solid transparent;
+    }
+    .stat-card.blue   { border-color: #002395; }
+    .stat-card.green  { border-color: #16a34a; }
+    .stat-card.yellow { border-color: #d97706; }
+    .stat-card.red    { border-color: #dc2626; }
+    .stat-card .num { font-size: 2rem; font-weight: 800; }
+    .stat-card .lbl { font-size: .8rem; color: #64748b; margin-top: 2px; }
+
+    /* ── Filters ── */
+    .filters {
+      background: #fff; border-radius: 14px; padding: 16px 20px;
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 20px;
+    }
+    .filters input, .filters select {
+      padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: .9rem; outline: none; transition: border-color .2s;
+    }
+    .filters input:focus, .filters select:focus { border-color: #002395; }
+    .filters input { flex: 1; min-width: 180px; }
+    .filters .refresh-btn {
+      background: #002395; color: #fff; border: none; padding: 8px 18px;
+      border-radius: 8px; cursor: pointer; font-size: .9rem; font-weight: 600;
+    }
+    .filters .refresh-btn:hover { background: #001a70; }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: #fff; border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+    thead th {
+      background: #f8fafc; padding: 12px 14px; text-align: left;
+      font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f1f5f9; transition: background .15s; }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td { padding: 11px 14px; vertical-align: middle; }
+
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: .78rem; font-weight: 600;
+    }
+    .badge-pending  { background: #fef3c7; color: #92400e; }
+    .badge-confirmed { background: #dcfce7; color: #166534; }
+    .badge-cancelled { background: #fee2e2; color: #991b1b; }
+    .badge-noshow   { background: #f1f5f9; color: #475569; }
+
+    .status-select {
+      padding: 4px 8px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: .82rem; cursor: pointer; outline: none; background: #fff;
+    }
+    .status-select:focus { border-color: #002395; }
+
+    /* ── Spots section ── */
+    .spots-title { font-size: 1.1rem; font-weight: 700; margin: 32px 0 14px; }
+    .spots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; }
+    .spot-card {
+      background: #fff; border-radius: 12px; padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .spot-card .sc-name { font-weight: 600; font-size: .9rem; margin-bottom: 8px; }
+    .spot-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+    .spot-fill { height: 100%; border-radius: 4px; background: #002395; transition: width .4s; }
+    .spot-fill.warn  { background: #d97706; }
+    .spot-fill.full  { background: #dc2626; }
+    .spot-nums { font-size: .78rem; color: #64748b; }
+
+    /* Loading */
+    .loading { text-align: center; padding: 60px; color: #94a3b8; font-size: 1.1rem; }
+
+    @media(max-width:900px) {
+      .stats { grid-template-columns: repeat(2,1fr); }
+    }
+    @media(max-width:600px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      header { padding: 0 16px; }
+      .page { padding: 20px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="logo">⬡ Hexagon</div>
+    <p>Admin Dashboard</p>
+    <input type="password" id="pwd-input" placeholder="Enter password" />
+    <button onclick="doLogin()">Login</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashboard">
+  <header>
+    <div class="brand">⬡ Hexagon Centre — Admin</div>
+    <button class="logout" onclick="doLogout()">Logout</button>
+  </header>
+
+  <div class="page">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card blue">
+        <div class="num" id="stat-total">—</div>
+        <div class="lbl">Total Enrollments</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="num" id="stat-pending">—</div>
+        <div class="lbl">Pending</div>
+      </div>
+      <div class="stat-card green">
+        <div class="num" id="stat-confirmed">—</div>
+        <div class="lbl">Confirmed</div>
+      </div>
+      <div class="stat-card red">
+        <div class="num" id="stat-cancelled">—</div>
+        <div class="lbl">Cancelled / No-show</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <input type="text" id="search" placeholder="Search name, phone, email…" oninput="renderTable()" />
+      <select id="filter-status" onchange="renderTable()">
+        <option value="">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Cancelled">Cancelled</option>
+        <option value="No-show">No-show</option>
+      </select>
+      <select id="filter-course" onchange="renderTable()">
+        <option value="">All Courses</option>
+      </select>
+      <button class="refresh-btn" onclick="loadLeads()">↻ Refresh</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="loading" id="table-loading">Loading enrollments…</div>
+      <table id="leads-table" style="display:none">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Course</th>
+            <th>Level</th>
+            <th>Schedule</th>
+            <th>Notes</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="leads-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Spots -->
+    <div class="spots-title">Course Spots</div>
+    <div class="spots-grid" id="spots-grid">
+      <div class="loading" style="grid-column:1/-1;padding:30px">Loading spots…</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Config ──
+  // Replace this with your actual Apps Script URL
+  const SCRIPT_URL = typeof GOOGLE_SCRIPT_URL !== "undefined" ? GOOGLE_SCRIPT_URL : "";
+
+  let _pwd = "";
+  let _allLeads = [];
+
+  // ── Login ──
+  document.getElementById("pwd-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") doLogin();
+  });
+
+  function doLogin() {
+    const pwd = document.getElementById("pwd-input").value.trim();
+    if (!pwd) return;
+    _pwd = pwd;
+    // Try fetching leads — if password is wrong the API returns an error
+    document.getElementById("login-error").textContent = "Checking…";
+    fetch(`${SCRIPT_URL}?action=leads&pwd=${encodeURIComponent(pwd)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error === "Unauthorized") {
+          document.getElementById("login-error").textContent = "Wrong password.";
+          _pwd = "";
+        } else {
+          document.getElementById("login-screen").style.display = "none";
+          document.getElementById("dashboard").style.display = "block";
+          _allLeads = Array.isArray(data) ? data : [];
+          renderAll();
+          loadSpots();
+        }
+      })
+      .catch(() => {
+        document.getElementById("login-error").textContent = "Could not connect. Check Apps Script URL.";
+      });
+  }
+
+  function doLogout() {
+    _pwd = "";
+    _allLeads = [];
+    document.getElementById("pwd-input").value = "";
+    document.getElementById("login-error").textContent = "";
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("dashboard").style.display = "none";
+  }
+
+  // ── Load leads ──
+  function loadLeads() {
+    document.getElementById("table-loading").style.display = "block";
+    document.getElementById("leads-table").style.display = "none";
+    fetch(`${SCRIPT_URL}?action=leads&pwd=${encodeURIComponent(_pwd)}`)
+      .then(r => r.json())
+      .then(data => {
+        _allLeads = Array.isArray(data) ? data : [];
+        renderAll();
+      });
+  }
+
+  // ── Render everything ──
+  function renderAll() {
+    updateStats();
+    populateCourseFilter();
+    renderTable();
+    document.getElementById("table-loading").style.display = "none";
+    document.getElementById("leads-table").style.display = "table";
+  }
+
+  function updateStats() {
+    document.getElementById("stat-total").textContent     = _allLeads.length;
+    document.getElementById("stat-pending").textContent   = _allLeads.filter(l => l.Status === "Pending").length;
+    document.getElementById("stat-confirmed").textContent = _allLeads.filter(l => l.Status === "Confirmed").length;
+    document.getElementById("stat-cancelled").textContent = _allLeads.filter(l => l.Status === "Cancelled" || l.Status === "No-show").length;
+  }
+
+  function populateCourseFilter() {
+    const sel = document.getElementById("filter-course");
+    const current = sel.value;
+    const courses = [...new Set(_allLeads.map(l => l.Course).filter(Boolean))].sort();
+    sel.innerHTML = '<option value="">All Courses</option>' +
+      courses.map(c => `<option value="${c}"${c===current?' selected':''}>${c}</option>`).join('');
+  }
+
+  function renderTable() {
+    const search  = document.getElementById("search").value.toLowerCase();
+    const status  = document.getElementById("filter-status").value;
+    const course  = document.getElementById("filter-course").value;
+
+    const filtered = _allLeads.filter(l => {
+      if (status && l.Status !== status) return false;
+      if (course && l.Course !== course) return false;
+      if (search) {
+        const hay = `${l.Name} ${l.Phone} ${l.Email} ${l.Course}`.toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+
+    const tbody = document.getElementById("leads-body");
+    tbody.innerHTML = filtered.map((l, i) => {
+      const date = l.Date ? new Date(l.Date).toLocaleDateString("en-GB", {day:"2-digit",month:"short",year:"numeric"}) : "—";
+      const statusBadge = badgeClass(l.Status);
+      return `<tr>
+        <td style="color:#94a3b8">${i+1}</td>
+        <td style="white-space:nowrap">${date}</td>
+        <td><strong>${esc(l.Name||"")}</strong></td>
+        <td><a href="tel:${esc(l.Phone||"")}" style="color:#002395;text-decoration:none">${esc(l.Phone||"—")}</a></td>
+        <td style="color:#64748b;font-size:.82rem">${esc(l.Email||"—")}</td>
+        <td>${esc(l.Course||"—")}</td>
+        <td>${esc(l.Level||"—")}</td>
+        <td style="font-size:.82rem;color:#64748b">${esc(l.Schedule||"—")}</td>
+        <td style="font-size:.82rem;color:#64748b;max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(l.Notes||"")}</td>
+        <td>
+          <select class="status-select" data-row="${l._row}" onchange="changeStatus(this)">
+            ${["Pending","Confirmed","Cancelled","No-show"].map(s =>
+              `<option${s===l.Status?' selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="10" style="text-align:center;padding:40px;color:#94a3b8">No enrollments found</td></tr>`;
+  }
+
+  function badgeClass(status) {
+    const map = { Pending:"pending", Confirmed:"confirmed", Cancelled:"cancelled", "No-show":"noshow" };
+    const cls = map[status] || "pending";
+    return `<span class="badge badge-${cls}">${status||"Pending"}</span>`;
+  }
+
+  function esc(str) {
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  // ── Change status ──
+  function changeStatus(sel) {
+    const row    = sel.dataset.row;
+    const status = sel.value;
+    sel.disabled = true;
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "updateStatus", pwd: _pwd, row: Number(row), status })
+    })
+    .then(r => r.json())
+    .then(data => {
+      sel.disabled = false;
+      if (data.error) { alert("Error: " + data.error); return; }
+      // Update local data
+      const lead = _allLeads.find(l => l._row === Number(row));
+      if (lead) lead.Status = status;
+      updateStats();
+      loadSpots(); // refresh spots after status change
+    })
+    .catch(() => { sel.disabled = false; alert("Failed to update status."); });
+  }
+
+  // ── Spots ──
+  function loadSpots() {
+    fetch(`${SCRIPT_URL}?action=spots`)
+      .then(r => r.json())
+      .then(data => {
+        if (!Array.isArray(data)) return;
+        const grid = document.getElementById("spots-grid");
+        grid.innerHTML = data.map(s => {
+          const pct = s.total > 0 ? Math.min(100, Math.round(s.taken / s.total * 100)) : 0;
+          const fillClass = pct >= 100 ? "full" : pct >= 75 ? "warn" : "";
+          const avail = Math.max(0, s.total - s.taken);
+          return `<div class="spot-card">
+            <div class="sc-name">${s.id}</div>
+            <div class="spot-bar"><div class="spot-fill ${fillClass}" style="width:${pct}%"></div></div>
+            <div class="spot-nums">${s.taken}/${s.total} taken · <strong>${avail} left</strong></div>
+          </div>`;
+        }).join('');
+      });
+  }
+</script>
+</body>
+</html>

@@ -34,14 +34,41 @@
 //     (This sheet is created automatically on first enrollment)
 // ============================================================
 
+const ADMIN_PASSWORD = "hexagon2026"; // Change this to your own password!
+
 // action=spots (default) → spot counts
 // action=reviews         → reviews from "Reviews" sheet
 // action=gallery         → photos from "Gallery" sheet
+// action=leads           → all enrollments (admin, requires pwd param)
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || "spots";
   if (action === "reviews") return doGetReviews();
   if (action === "gallery") return doGetGallery();
+  if (action === "leads")   return doGetLeads(e);
   return doGetSpots();
+}
+
+function doGetLeads(e) {
+  if (!e || e.parameter.pwd !== ADMIN_PASSWORD)
+    return jsonResponse({ error: "Unauthorized" });
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Leads");
+    if (!sheet) return jsonResponse([]);
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const leads = [];
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[1]) continue; // skip empty rows
+      const obj = {};
+      headers.forEach((h, j) => obj[h] = row[j]);
+      obj._row = i + 1; // 1-based row number for updates
+      leads.push(obj);
+    }
+    return jsonResponse(leads);
+  } catch (err) {
+    return jsonResponse({ error: err.message });
+  }
 }
 
 function doGetSpots() {
@@ -141,6 +168,29 @@ function doGetGallery() {
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents);
+
+    // Admin: update lead status
+    if (payload.action === "updateStatus") {
+      if (payload.pwd !== ADMIN_PASSWORD) return jsonResponse({ error: "Unauthorized" });
+      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Leads");
+      if (!sheet) return jsonResponse({ error: "Leads sheet not found" });
+      // Find Status column index
+      const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+      const statusCol = headers.indexOf("Status") + 1;
+      if (!statusCol) return jsonResponse({ error: "Status column not found" });
+      sheet.getRange(payload.row, statusCol).setValue(payload.status);
+      // Fire onLeadsEdit manually so spots increment works
+      if (String(payload.status).toLowerCase() === "confirmed") {
+        const fakeEvent = {
+          range: sheet.getRange(payload.row, statusCol),
+          value: payload.status,
+          source: SpreadsheetApp.getActiveSpreadsheet()
+        };
+        fakeEvent.range.getSheet = () => sheet;
+        onLeadsEdit(fakeEvent);
+      }
+      return jsonResponse({ status: "ok" });
+    }
     const ss      = SpreadsheetApp.getActiveSpreadsheet();
 
     // Auto-create Leads sheet if it doesn't exist
