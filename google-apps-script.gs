@@ -34,7 +34,7 @@
 //     (This sheet is created automatically on first enrollment)
 // ============================================================
 
-const ADMIN_PASSWORD = "hexagon2026"; // Change this to your own password!
+const ADMIN_PASSWORD = "hexagonlolo26"; // Change this to your own password!
 
 // action=spots (default) → spot counts
 // action=reviews         → reviews from "Reviews" sheet
