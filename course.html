@@ -232,10 +232,14 @@
       if (course.popular) document.getElementById('hero-popular').classList.remove('hidden');
 
       const av = document.getElementById('teacher-avatar');
-      av.textContent = course.teacher.initials;
-      av.style.background = course.teacher.avatarColor;
-      document.getElementById('teacher-name').textContent = isRTL ? course.teacher.nameAr : course.teacher.nameEn;
-      document.getElementById('teacher-exp').textContent = isRTL ? course.teacher.expAr : course.teacher.expEn;
+      if (av) {
+        av.textContent = course.teacher.initials;
+        av.style.background = course.teacher.avatarColor;
+      }
+      const tnEl = document.getElementById('teacher-name');
+      if (tnEl) tnEl.textContent = isRTL ? course.teacher.nameAr : course.teacher.nameEn;
+      const teEl = document.getElementById('teacher-exp');
+      if (teEl) teEl.textContent = isRTL ? course.teacher.expAr : course.teacher.expEn;
 
       // Levels — clickable filter buttons
       const levels = isRTL ? course.levelsAr : course.levels;
