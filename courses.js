@@ -270,20 +270,7 @@ function buildCourseCards() {
           <span class="lang-ar">${course.descAr}</span>
         </p>
 
-        <div class="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-               style="background:${course.teacher.avatarColor}">${course.teacher.initials}</div>
-          <div>
-            <div class="text-xs font-semibold text-gray-800">
-              <span class="lang-en">${course.teacher.nameEn}</span>
-              <span class="lang-ar">${course.teacher.nameAr}</span>
-            </div>
-            <div class="text-xs text-gray-400">
-              <span class="lang-en">${course.teacher.expEn}</span>
-              <span class="lang-ar">${course.teacher.expAr}</span>
-            </div>
-          </div>
-        </div>
+        <!-- Teacher info hidden until ready -->
 
         ${actionBtn}
       </div>`;
@@ -536,21 +523,7 @@ function renderSchedule(events) {
         </div>`;
     }
 
-    const teacherHTML = course ? `
-      <div class="flex items-center gap-3 bg-gray-50 rounded-xl px-3 py-2.5">
-        <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-             style="background:${course.teacher.avatarColor}">${course.teacher.initials}</div>
-        <div>
-          <div class="text-xs font-bold text-gray-800">
-            <span class="lang-en">${course.teacher.nameEn}</span>
-            <span class="lang-ar">${course.teacher.nameAr}</span>
-          </div>
-          <div class="text-xs text-gray-400">
-            <span class="lang-en">${course.teacher.expEn}</span>
-            <span class="lang-ar">${course.teacher.expAr}</span>
-          </div>
-        </div>
-      </div>` : "";
+    const teacherHTML = ""; /* Teacher info hidden until ready */
 
     const datesList = groupEvents.map(ev => {
       const d = new Date(ev.start?.dateTime || ev.start?.date);
