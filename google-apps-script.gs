@@ -34,7 +34,7 @@
 //     (This sheet is created automatically on first enrollment)
 // ============================================================
 
-const ADMIN_PASSWORD = "hexagonlolo26"; // Change this to your own password!
+const ADMIN_PASSWORD = "hexagon2026"; // Change this to your own password!
 
 // action=spots (default) → spot counts
 // action=reviews         → reviews from "Reviews" sheet
@@ -42,9 +42,11 @@ const ADMIN_PASSWORD = "hexagonlolo26"; // Change this to your own password!
 // action=leads           → all enrollments (admin, requires pwd param)
 function doGet(e) {
   const action = (e && e.parameter && e.parameter.action) || "spots";
-  if (action === "reviews") return doGetReviews();
-  if (action === "gallery") return doGetGallery();
-  if (action === "leads")   return doGetLeads(e);
+  if (action === "reviews")      return doGetReviews();
+  if (action === "gallery")      return doGetGallery();
+  if (action === "leads")        return doGetLeads(e);
+  if (action === "validateCode") return doValidateCode(e);
+  if (action === "worksheetCodes") return doGetWorksheetCodes(e);
   return doGetSpots();
 }
 
@@ -168,6 +170,10 @@ function doGetGallery() {
 function doPost(e) {
   try {
     const payload = JSON.parse(e.postData.contents);
+
+    // Admin: generate worksheet code
+    if (payload.action === "generateCode")   return handleGenerateCode(payload);
+    if (payload.action === "deactivateCode") return handleDeactivateCode(payload);
 
     // Admin: update lead status
     if (payload.action === "updateStatus") {
@@ -356,6 +362,150 @@ function createCalendarEvents() {
 
   Logger.log(`✅ Done — Created: ${created}, Skipped (already exist): ${skipped}`);
   SpreadsheetApp.getUi().alert(`✅ Done!\nCreated: ${created} events\nSkipped: ${skipped} (already existed)`);
+}
+
+// ============================================================
+// PAID WORKSHEETS — access code system
+//
+// SHEET SETUP — create a sheet named "Worksheets":
+//   Row 1 (header): Code | Name | Phone | Course | Level | Price | CreatedDate | ExpiryDate | Active
+//   (Rows are added automatically when admin generates a code)
+//
+// GET  ?action=validateCode&code=XXX&phone=YYY  → { valid, name, course, level } or { valid: false, error }
+// GET  ?action=worksheetCodes&pwd=...           → all code rows (admin only)
+// POST { action: "generateCode", pwd, name, phone, course, level, price } → { code }
+// ============================================================
+
+function doValidateCode(e) {
+  const code  = (e.parameter.code  || "").trim().toUpperCase();
+  const phone = normalizePhone(e.parameter.phone || "");
+  if (!code || !phone) return jsonResponse({ valid: false, error: "Missing code or phone" });
+
+  try {
+    const ss    = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("Worksheets");
+    if (!sheet) return jsonResponse({ valid: false, error: "Worksheets sheet not found" });
+
+    const data = sheet.getDataRange().getValues();
+    // Header: Code(0) Name(1) Phone(2) Course(3) Level(4) Price(5) CreatedDate(6) ExpiryDate(7) Active(8)
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (!row[0]) continue;
+      const rowCode  = String(row[0]).trim().toUpperCase();
+      const rowPhone = normalizePhone(String(row[2]));
+      if (rowCode !== code) continue;
+
+      // Code found — check phone
+      if (rowPhone !== phone)
+        return jsonResponse({ valid: false, error: "wrong_phone" });
+
+      // Check active
+      if (String(row[8]).toLowerCase() === "false" || row[8] === false)
+        return jsonResponse({ valid: false, error: "inactive" });
+
+      // Check expiry
+      const expiry = new Date(row[7]);
+      if (!isNaN(expiry.getTime()) && expiry < new Date())
+        return jsonResponse({ valid: false, error: "expired" });
+
+      return jsonResponse({
+        valid:    true,
+        name:     String(row[1]).trim(),
+        course:   String(row[3]).trim(),
+        level:    String(row[4]).trim(),
+        expiry:   row[7] ? new Date(row[7]).toISOString().slice(0, 10) : null
+      });
+    }
+    return jsonResponse({ valid: false, error: "not_found" });
+  } catch (err) {
+    return jsonResponse({ valid: false, error: err.message });
+  }
+}
+
+function doGetWorksheetCodes(e) {
+  if (!e || e.parameter.pwd !== ADMIN_PASSWORD)
+    return jsonResponse({ error: "Unauthorized" });
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Worksheets");
+    if (!sheet) return jsonResponse([]);
+    const data    = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const rows    = [];
+    for (let i = 1; i < data.length; i++) {
+      if (!data[i][0]) continue;
+      const obj = {};
+      headers.forEach((h, j) => obj[h] = data[i][j]);
+      obj._row = i + 1;
+      rows.push(obj);
+    }
+    return jsonResponse(rows);
+  } catch (err) {
+    return jsonResponse({ error: err.message });
+  }
+}
+
+// Called from doPost when payload.action === "generateCode"
+function handleGenerateCode(payload) {
+  if (payload.pwd !== ADMIN_PASSWORD) return jsonResponse({ error: "Unauthorized" });
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName("Worksheets");
+  if (!sheet) {
+    sheet = ss.insertSheet("Worksheets");
+    sheet.appendRow(["Code", "Name", "Phone", "Course", "Level", "Price", "CreatedDate", "ExpiryDate", "Active"]);
+  }
+
+  // Generate unique code: HEX-XX-XXXX  (XX = course prefix, XXXX = random alphanumeric)
+  const coursePrefix = String(payload.course || "GN").replace(/[^A-Za-z]/g, "").toUpperCase().slice(0, 2) || "GN";
+  let code;
+  const existingCodes = sheet.getDataRange().getValues().map(r => String(r[0]).toUpperCase());
+  do {
+    code = "HEX-" + coursePrefix + "-" + _randomCode(4);
+  } while (existingCodes.includes(code));
+
+  const now    = new Date();
+  const expiry = new Date(now);
+  expiry.setMonth(expiry.getMonth() + 6);
+
+  sheet.appendRow([
+    code,
+    String(payload.name  || "").trim(),
+    normalizePhone(String(payload.phone || "")),
+    String(payload.course || "").trim(),
+    String(payload.level  || "").trim(),
+    Number(payload.price  || 0),
+    now.toISOString().slice(0, 10),
+    expiry.toISOString().slice(0, 10),
+    true
+  ]);
+
+  return jsonResponse({ code });
+}
+
+// Deactivate a code (admin)
+function handleDeactivateCode(payload) {
+  if (payload.pwd !== ADMIN_PASSWORD) return jsonResponse({ error: "Unauthorized" });
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Worksheets");
+  if (!sheet) return jsonResponse({ error: "Worksheets sheet not found" });
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim().toUpperCase() === String(payload.code).trim().toUpperCase()) {
+      sheet.getRange(i + 1, 9).setValue(false); // Active column = false
+      return jsonResponse({ status: "ok" });
+    }
+  }
+  return jsonResponse({ error: "Code not found" });
+}
+
+function _randomCode(len) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no I/O/1/0 to avoid confusion
+  let out = "";
+  for (let i = 0; i < len; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+
+function normalizePhone(p) {
+  return String(p).replace(/[\s\-().+]/g, "").replace(/^00/, "").replace(/^0/, "962");
 }
 
 function jsonResponse(data) {

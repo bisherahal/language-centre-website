@@ -128,6 +128,51 @@
     .spot-fill.full  { background: #dc2626; }
     .spot-nums { font-size: .78rem; color: #64748b; }
 
+    /* ── Tabs ── */
+    .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; }
+    .tab-btn {
+      padding: 10px 22px; font-size: .9rem; font-weight: 600; border: none;
+      background: none; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent;
+      margin-bottom: -2px; transition: color .15s, border-color .15s;
+    }
+    .tab-btn.active { color: #002395; border-bottom-color: #002395; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ── Code generation form ── */
+    .gen-card {
+      background: #fff; border-radius: 14px; padding: 24px 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06); margin-bottom: 24px;
+    }
+    .gen-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: #002395; }
+    .gen-form { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 12px; align-items: end; }
+    .gen-form label { display: block; font-size: .78rem; font-weight: 600; color: #64748b; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+    .gen-form input, .gen-form select {
+      width: 100%; padding: 9px 12px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+      font-size: .9rem; outline: none; transition: border-color .2s;
+    }
+    .gen-form input:focus, .gen-form select:focus { border-color: #002395; }
+    .btn-gen {
+      background: #002395; color: #fff; border: none; padding: 10px 24px;
+      border-radius: 8px; font-size: .9rem; font-weight: 700; cursor: pointer;
+      transition: background .2s; white-space: nowrap;
+    }
+    .btn-gen:hover { background: #001a70; }
+    .code-result {
+      margin-top: 16px; padding: 14px 20px; background: #f0fdf4; border: 1.5px solid #86efac;
+      border-radius: 10px; display: none; align-items: center; gap: 16px;
+    }
+    .code-result.show { display: flex; }
+    .code-result .code-val { font-size: 1.5rem; font-weight: 900; letter-spacing: 4px; color: #002395; }
+    .code-result .copy-btn {
+      background: #002395; color: #fff; border: none; padding: 7px 16px;
+      border-radius: 8px; font-size: .85rem; font-weight: 700; cursor: pointer;
+    }
+
+    /* ── Codes table (reuses table styles) ── */
+    .badge-active   { background: #dcfce7; color: #166534; }
+    .badge-inactive { background: #fee2e2; color: #991b1b; }
+
     /* Loading */
     .loading { text-align: center; padding: 60px; color: #94a3b8; font-size: 1.1rem; }
 
@@ -162,6 +207,15 @@
   </header>
 
   <div class="page">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('enrollments', this)">📋 Enrollments</button>
+      <button class="tab-btn" onclick="switchTab('worksheets', this)">🔐 Worksheets</button>
+    </div>
+
+    <!-- ══ ENROLLMENTS TAB ══ -->
+    <div class="tab-pane active" id="tab-enrollments">
+
     <!-- Stats -->
     <div class="stats">
       <div class="stat-card blue">
@@ -225,6 +279,99 @@
     <div class="spots-grid" id="spots-grid">
       <div class="loading" style="grid-column:1/-1;padding:30px">Loading spots…</div>
     </div>
+
+    </div><!-- /tab-enrollments -->
+
+    <!-- ══ WORKSHEETS TAB ══ -->
+    <div class="tab-pane" id="tab-worksheets">
+
+      <!-- Generate Code Form -->
+      <div class="gen-card">
+        <h3>Generate Access Code</h3>
+        <div class="gen-form">
+          <div>
+            <label>Student Name</label>
+            <input type="text" id="gc-name" placeholder="Full name"/>
+          </div>
+          <div>
+            <label>Phone (WhatsApp)</label>
+            <input type="tel" id="gc-phone" placeholder="07xxxxxxxx"/>
+          </div>
+          <div>
+            <label>Course</label>
+            <input type="text" id="gc-course" placeholder="French" list="gc-course-list"/>
+            <datalist id="gc-course-list">
+              <option value="French"/>
+              <option value="English"/>
+              <option value="Arabic"/>
+              <option value="Spanish"/>
+              <option value="Italian"/>
+              <option value="Dutch"/>
+            </datalist>
+          </div>
+          <div>
+            <label>Level</label>
+            <input type="text" id="gc-level" placeholder="Beginner" list="gc-level-list"/>
+            <datalist id="gc-level-list">
+              <option value="Beginner"/>
+              <option value="A1"/>
+              <option value="A2"/>
+              <option value="B1"/>
+              <option value="B2"/>
+            </datalist>
+          </div>
+          <div>
+            <label>Price (JOD)</label>
+            <input type="number" id="gc-price" placeholder="0" min="0"/>
+          </div>
+          <div style="display:flex;align-items:flex-end">
+            <button class="btn-gen" onclick="generateCode()">Generate Code</button>
+          </div>
+        </div>
+        <div class="code-result" id="gc-result">
+          <div>
+            <div style="font-size:.78rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Access Code</div>
+            <div class="code-val" id="gc-code-val">—</div>
+          </div>
+          <button class="copy-btn" onclick="copyCode()">Copy</button>
+          <button class="copy-btn" style="background:#16a34a" onclick="whatsappCode()">📱 WhatsApp</button>
+        </div>
+      </div>
+
+      <!-- Codes Table -->
+      <div class="filters">
+        <input type="text" id="ws-search" placeholder="Search name, phone, code…" oninput="renderCodes()"/>
+        <select id="ws-filter-active" onchange="renderCodes()">
+          <option value="">All</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+        <button class="refresh-btn" onclick="loadCodes()">↻ Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <div class="loading" id="codes-loading">Loading codes…</div>
+        <table id="codes-table" style="display:none">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Course</th>
+              <th>Level</th>
+              <th>Price</th>
+              <th>Created</th>
+              <th>Expires</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="codes-body"></tbody>
+        </table>
+      </div>
+
+    </div><!-- /tab-worksheets -->
+
   </div>
 </div>
 
@@ -267,12 +414,14 @@
   }
 
   function doLogout() {
-    _pwd = "";
-    _allLeads = [];
+    _pwd = ""; _allLeads = []; _allCodes = [];
     document.getElementById("pwd-input").value = "";
     document.getElementById("login-error").textContent = "";
     document.getElementById("login-screen").style.display = "flex";
     document.getElementById("dashboard").style.display = "none";
+    // Reset to first tab
+    document.querySelectorAll(".tab-pane").forEach((el, i) => el.classList.toggle("active", i === 0));
+    document.querySelectorAll(".tab-btn").forEach((el, i) => el.classList.toggle("active", i === 0));
   }
 
   // ── Load leads ──
@@ -381,6 +530,133 @@
       loadSpots(); // refresh spots after status change
     })
     .catch(() => { sel.disabled = false; alert("Failed to update status."); });
+  }
+
+  // ── Tabs ──
+  function switchTab(name, btn) {
+    document.querySelectorAll(".tab-pane").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+    document.getElementById("tab-" + name).classList.add("active");
+    btn.classList.add("active");
+    if (name === "worksheets" && _allCodes.length === 0) loadCodes();
+  }
+
+  // ── Worksheets ──
+  let _allCodes   = [];
+  let _lastGenName = "", _lastGenPhone = "", _lastGenCode = "";
+
+  function loadCodes() {
+    document.getElementById("codes-loading").style.display = "block";
+    document.getElementById("codes-table").style.display   = "none";
+    fetch(`${SCRIPT_URL}?action=worksheetCodes&pwd=${encodeURIComponent(_pwd)}`)
+      .then(r => r.json())
+      .then(data => {
+        _allCodes = Array.isArray(data) ? data : [];
+        renderCodes();
+        document.getElementById("codes-loading").style.display = "none";
+        document.getElementById("codes-table").style.display   = "table";
+      })
+      .catch(() => {
+        document.getElementById("codes-loading").textContent = "Failed to load.";
+      });
+  }
+
+  function renderCodes() {
+    const search    = document.getElementById("ws-search").value.toLowerCase();
+    const activeF   = document.getElementById("ws-filter-active").value;
+    const filtered  = _allCodes.filter(c => {
+      if (activeF && String(c.Active) !== activeF) return false;
+      if (search) {
+        const hay = `${c.Name} ${c.Phone} ${c.Code} ${c.Course}`.toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+    const tbody = document.getElementById("codes-body");
+    tbody.innerHTML = filtered.map((c, i) => {
+      const isActive = String(c.Active) !== "false" && c.Active !== false;
+      const expiry   = c.ExpiryDate ? new Date(c.ExpiryDate).toLocaleDateString("en-GB", {day:"2-digit",month:"short",year:"numeric"}) : "—";
+      const created  = c.CreatedDate ? new Date(c.CreatedDate).toLocaleDateString("en-GB", {day:"2-digit",month:"short",year:"numeric"}) : "—";
+      const badgeCls = isActive ? "badge-active" : "badge-inactive";
+      const badgeTxt = isActive ? "Active" : "Inactive";
+      return `<tr>
+        <td style="color:#94a3b8">${i+1}</td>
+        <td><strong style="letter-spacing:2px;color:#002395">${esc(c.Code||"")}</strong></td>
+        <td>${esc(c.Name||"")}</td>
+        <td><a href="tel:${esc(c.Phone||"")}" style="color:#002395;text-decoration:none">${esc(c.Phone||"—")}</a></td>
+        <td>${esc(c.Course||"—")}</td>
+        <td>${esc(c.Level||"—")}</td>
+        <td>${c.Price ? c.Price + " JOD" : "—"}</td>
+        <td>${created}</td>
+        <td>${expiry}</td>
+        <td><span class="badge ${badgeCls}">${badgeTxt}</span></td>
+        <td>
+          ${isActive
+            ? `<button onclick="deactivateCode('${esc(c.Code||"")}', this)" style="background:#dc2626;color:#fff;border:none;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600">Deactivate</button>`
+            : `<span style="color:#94a3b8;font-size:.8rem">—</span>`}
+        </td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="11" style="text-align:center;padding:40px;color:#94a3b8">No codes found</td></tr>`;
+  }
+
+  function generateCode() {
+    const name   = document.getElementById("gc-name").value.trim();
+    const phone  = document.getElementById("gc-phone").value.trim();
+    const course = document.getElementById("gc-course").value.trim();
+    const level  = document.getElementById("gc-level").value.trim();
+    const price  = document.getElementById("gc-price").value.trim();
+    if (!name || !phone || !course || !level) { alert("Please fill in Name, Phone, Course and Level."); return; }
+
+    const btn = document.querySelector(".btn-gen");
+    btn.disabled = true; btn.textContent = "Generating…";
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "generateCode", pwd: _pwd, name, phone, course, level, price: Number(price)||0 })
+    })
+    .then(r => r.json())
+    .then(data => {
+      btn.disabled = false; btn.textContent = "Generate Code";
+      if (data.error) { alert("Error: " + data.error); return; }
+      _lastGenCode  = data.code;
+      _lastGenName  = name;
+      _lastGenPhone = phone;
+      document.getElementById("gc-code-val").textContent = data.code;
+      document.getElementById("gc-result").classList.add("show");
+      // Refresh codes table silently
+      fetch(`${SCRIPT_URL}?action=worksheetCodes&pwd=${encodeURIComponent(_pwd)}`)
+        .then(r => r.json()).then(d => { if (Array.isArray(d)) { _allCodes = d; renderCodes(); } });
+    })
+    .catch(() => { btn.disabled = false; btn.textContent = "Generate Code"; alert("Failed. Check connection."); });
+  }
+
+  function copyCode() {
+    navigator.clipboard.writeText(_lastGenCode).then(() => alert("Copied: " + _lastGenCode));
+  }
+
+  function whatsappCode() {
+    const msg = encodeURIComponent(
+      `مرحباً ${_lastGenName}،\n\nكود الوصول إلى ورقة عملك في مركز Hexagon:\n\n🔑 ${_lastGenCode}\n\nادخل الكود مع رقم هاتفك على الرابط:\nhttps://hexagoncentre.com/worksheet.html\n\nمركز Hexagon للغات`
+    );
+    const phone = _lastGenPhone.replace(/[^0-9]/g, "");
+    window.open(`https://wa.me/${phone.startsWith("962") ? phone : "962" + phone.replace(/^0/, "")}?text=${msg}`, "_blank");
+  }
+
+  function deactivateCode(code, btn) {
+    if (!confirm(`Deactivate code ${code}? The student will lose access.`)) return;
+    btn.disabled = true;
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "deactivateCode", pwd: _pwd, code })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { alert("Error: " + data.error); btn.disabled = false; return; }
+      const c = _allCodes.find(x => String(x.Code).toUpperCase() === code.toUpperCase());
+      if (c) c.Active = false;
+      renderCodes();
+    })
+    .catch(() => { btn.disabled = false; alert("Failed."); });
   }
 
   // ── Spots ──

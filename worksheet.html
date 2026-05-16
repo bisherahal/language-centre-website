@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Worksheet — Hexagon Centre</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+Arabic:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="courses.js"></script>
+  <style>
+    /* ── Reset & base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', 'Noto Sans Arabic', sans-serif;
+      background: #f5f6fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+      /* Anti-copy */
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    /* Disable print */
+    @media print { body { display: none !important; } }
+
+    /* ── Navbar ───────────────────────────────────────── */
+    nav {
+      background: #002395;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 60px;
+      box-shadow: 0 2px 12px rgba(0,35,149,0.25);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 36px; height: 36px; border-radius: 6px; object-fit: cover; }
+    .nav-logo span { color: white; font-size: 15px; font-weight: 800; letter-spacing: 0.5px; }
+    .nav-badge {
+      background: #ED2939; color: white;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      padding: 4px 10px; border-radius: 12px; text-transform: uppercase;
+    }
+
+    /* ── Code Gate ────────────────────────────────────── */
+    #gate-screen {
+      min-height: calc(100vh - 60px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px 16px;
+    }
+    .gate-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,35,149,0.12);
+      padding: 48px 40px;
+      width: 100%; max-width: 440px;
+      text-align: center;
+    }
+    .gate-icon { font-size: 48px; margin-bottom: 12px; }
+    .gate-card h1 { font-size: 26px; font-weight: 800; color: #002395; margin-bottom: 6px; }
+    .gate-card p { font-size: 14px; color: #666; margin-bottom: 28px; line-height: 1.6; }
+    .gate-card label { display: block; text-align: left; font-size: 12px; font-weight: 700; color: #555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; margin-top: 16px; }
+    .gate-card input {
+      width: 100%; padding: 13px 16px; border: 2px solid #e0e0e0; border-radius: 10px;
+      font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    .gate-card input:focus { border-color: #002395; }
+    #gate-error { color: #ED2939; font-size: 13px; font-weight: 600; margin-top: 12px; min-height: 20px; }
+    .btn-unlock {
+      width: 100%; margin-top: 24px; padding: 15px;
+      background: #002395; color: white;
+      border: none; border-radius: 10px;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.5px;
+    }
+    .btn-unlock:hover { background: #001a6e; }
+    .btn-unlock:active { transform: scale(0.98); }
+    .btn-unlock:disabled { background: #bbb; cursor: not-allowed; }
+    .gate-footer { margin-top: 24px; font-size: 13px; color: #888; }
+    .gate-footer a { color: #002395; font-weight: 700; text-decoration: none; }
+
+    /* ── Worksheet Content ────────────────────────────── */
+    #worksheet-screen { display: none; padding: 0 0 60px; }
+
+    /* Watermark overlay — slowly drifts */
+    #watermark-overlay {
+      position: fixed; inset: 0; z-index: 999; pointer-events: none;
+      overflow: hidden;
+    }
+    .wm-text {
+      position: absolute;
+      color: rgba(0, 35, 149, 0.07);
+      font-size: 26px; font-weight: 900; white-space: nowrap;
+      letter-spacing: 4px; text-transform: uppercase;
+      transform: rotate(-35deg);
+      animation: wmDrift 18s linear infinite;
+    }
+
+    @keyframes wmDrift {
+      0%   { transform: rotate(-35deg) translate(0, 0); }
+      50%  { transform: rotate(-35deg) translate(30px, 15px); }
+      100% { transform: rotate(-35deg) translate(0, 0); }
+    }
+
+    /* Header band */
+    .ws-header {
+      background: #002395; color: white;
+      padding: 24px 32px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .ws-header h2 { font-size: 20px; font-weight: 800; }
+    .ws-header .ws-meta { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+    .ws-header-right { text-align: right; }
+    .student-name-badge {
+      background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.35);
+      padding: 6px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 700;
+    }
+    .copyright-notice {
+      background: #fff3cd; border-left: 4px solid #ED2939;
+      padding: 10px 20px; font-size: 12px; color: #7a4400;
+      font-weight: 600;
+    }
+
+    /* Content area */
+    .ws-body { max-width: 860px; margin: 0 auto; padding: 32px 24px; }
+
+    /* Section */
+    .ws-section {
+      background: white; border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,35,149,0.07);
+      margin-bottom: 28px; overflow: hidden;
+    }
+    .ws-section-header {
+      background: #002395; color: white;
+      padding: 14px 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .ws-section-header h3 { font-size: 15px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
+    .ws-section-header .section-num {
+      background: #ED2939; width: 28px; height: 28px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; flex-shrink: 0;
+    }
+
+    /* Paragraph with watermark */
+    .para-wrap { position: relative; padding: 24px; }
+    .para-text {
+      font-size: 15px; line-height: 1.85; color: #2c2c2c;
+      position: relative; z-index: 2;
+    }
+    .para-owner {
+      font-size: 11px; font-weight: 700; color: rgba(0,35,149,0.18);
+      text-align: right; margin-top: 8px; letter-spacing: 1px;
+    }
+
+    /* Questions */
+    .questions-wrap { padding: 20px 24px; border-top: 1px solid #f0f0f0; }
+    .question-block { margin-bottom: 20px; }
+    .question-block:last-child { margin-bottom: 0; }
+    .q-text { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 10px; }
+    .q-num { color: #ED2939; margin-right: 6px; }
+
+    /* MCQ options */
+    .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .option-label {
+      display: flex; align-items: center; gap: 10px;
+      background: #f8f9ff; border: 1.5px solid #e8ecff;
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 13px; font-weight: 600; color: #333;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .option-label:hover { background: #eef1ff; border-color: #002395; }
+    .option-label input[type="radio"] { accent-color: #002395; width: 16px; height: 16px; flex-shrink: 0; }
+    .option-label.selected { background: #002395; border-color: #002395; color: white; }
+    .option-label.correct  { background: #d4edda; border-color: #28a745; color: #155724; }
+    .option-label.wrong    { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+
+    /* Fill-in-the-blank */
+    .fill-input {
+      border: none; border-bottom: 2px solid #002395;
+      background: transparent; font-size: 14px; font-family: inherit;
+      padding: 2px 6px; outline: none; width: 140px; text-align: center;
+      color: #002395; font-weight: 700;
+    }
+
+    /* Submit */
+    .submit-wrap { text-align: center; padding: 0 24px 28px; }
+    .btn-submit {
+      background: #ED2939; color: white; border: none;
+      padding: 16px 48px; border-radius: 12px;
+      font-size: 16px; font-weight: 800; cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 18px rgba(237,41,57,0.35);
+    }
+    .btn-submit:hover  { background: #c0001e; }
+    .btn-submit:active { transform: scale(0.97); }
+    .btn-submit:disabled { background: #bbb; cursor: not-allowed; box-shadow: none; }
+
+    /* Score card */
+    #score-card {
+      display: none; background: white; border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,35,149,0.08);
+      padding: 40px 32px; text-align: center; margin-top: 28px;
+    }
+    .score-big { font-size: 64px; font-weight: 900; color: #002395; line-height: 1; }
+    .score-label { font-size: 18px; font-weight: 700; color: #555; margin-top: 8px; }
+    .score-sub { font-size: 14px; color: #888; margin-top: 8px; }
+    .score-bar-wrap { height: 12px; background: #e8ecff; border-radius: 6px; margin: 20px 0; overflow: hidden; }
+    .score-bar-fill { height: 100%; background: #002395; border-radius: 6px; transition: width 1s ease; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .gate-card { padding: 32px 20px; }
+      .ws-header  { padding: 16px 20px; }
+      .ws-body    { padding: 20px 12px; }
+      .options-grid { grid-template-columns: 1fr; }
+      .para-wrap, .questions-wrap, .submit-wrap { padding-left: 16px; padding-right: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ WATERMARK OVERLAY (hidden until unlocked) ════════════════ -->
+<div id="watermark-overlay"></div>
+
+<!-- ═══ NAVBAR ═══════════════════════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="https://res.cloudinary.com/dygztnkte/image/upload/v1773693411/hex_l7km0h.jpg" alt="Hexagon"/>
+    <span>Hexagon Centre</span>
+  </a>
+  <span class="nav-badge">Worksheets</span>
+</nav>
+
+<!-- ═══ CODE GATE ════════════════════════════════════════════════ -->
+<div id="gate-screen">
+  <div class="gate-card">
+    <div class="gate-icon">🔐</div>
+    <h1>Access Your Worksheet</h1>
+    <p>Enter your phone number and the access code you received after purchase.</p>
+
+    <label for="gate-phone">Phone Number (WhatsApp)</label>
+    <input type="tel" id="gate-phone" placeholder="07xxxxxxxx" autocomplete="tel" inputmode="tel"/>
+
+    <label for="gate-code">Access Code</label>
+    <input type="text" id="gate-code" placeholder="HEX-FR-XXXX" autocomplete="off" style="text-transform:uppercase; letter-spacing: 2px;"/>
+
+    <div id="gate-error"></div>
+
+    <button class="btn-unlock" id="btn-unlock" onclick="unlockWorksheet()">Unlock Worksheet →</button>
+
+    <div class="gate-footer">
+      Don't have a code yet?
+      <a href="https://wa.me/962796831961?text=I'd+like+to+purchase+a+worksheet" target="_blank">WhatsApp us →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ WORKSHEET CONTENT ════════════════════════════════════════ -->
+<div id="worksheet-screen">
+  <div class="ws-header">
+    <div>
+      <h2 id="ws-title">French Worksheet</h2>
+      <div class="ws-meta" id="ws-meta">Beginner Level · Hexagon Centre</div>
+    </div>
+    <div class="ws-header-right">
+      <div class="student-name-badge" id="ws-student-badge">👤 Student</div>
+    </div>
+  </div>
+  <div class="copyright-notice">
+    © Hexagon Centre For Languages &amp; Translation. This worksheet is for personal use only.
+    Sharing, copying, or reproducing this content is strictly prohibited.
+    Unique ID: <span id="ws-unique-id">—</span>
+  </div>
+
+  <div class="ws-body" id="ws-body">
+    <!-- Sections injected here by JS -->
+  </div>
+
+  <div class="ws-body">
+    <div class="ws-section">
+      <div class="submit-wrap" style="padding-top:24px;">
+        <button class="btn-submit" id="btn-submit" onclick="submitAnswers()">Submit Answers ✓</button>
+      </div>
+    </div>
+    <div id="score-card">
+      <div class="score-big" id="score-pct">—</div>
+      <div class="score-label" id="score-label">—</div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" id="score-bar" style="width:0%"></div></div>
+      <div class="score-sub" id="score-sub">—</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Config ─────────────────────────────────────────────────────────
+const SCRIPT_URL = typeof GOOGLE_SCRIPT_URL !== "undefined" && !GOOGLE_SCRIPT_URL.startsWith("[")
+  ? GOOGLE_SCRIPT_URL : null;
+
+// ── Worksheet content bank ─────────────────────────────────────────
+// Admin: add worksheets here. Each worksheet has an id matching course+level.
+// Students with the matching course+level see their assigned worksheet.
+const WORKSHEETS = {
+  // key: "course-level" (both lowercased, spaces → hyphens)
+  "french-beginner": {
+    title:    "French Worksheet — Beginner",
+    titleAr:  "ورقة عمل الفرنسية — المستوى المبتدئ",
+    sections: [
+      {
+        type:   "reading",
+        titleEn: "Section 1: Reading Comprehension",
+        titleAr: "القسم الأول: الفهم القرائي",
+        paragraph: `Bonjour! Je m'appelle Sophie. J'ai vingt-deux ans et j'habite à Paris, la capitale de la France. Je suis étudiante à l'université. J'étudie les langues étrangères. Je parle français, anglais et un peu d'arabe. J'aime beaucoup voyager et découvrir de nouvelles cultures. Le week-end, je visite des musées et des cafés avec mes amis. Ma couleur préférée est le bleu. Mon plat préféré est la quiche lorraine.`,
+        questions: [
+          {
+            id:   "q1",
+            type: "mcq",
+            text: "Quel âge a Sophie ?",
+            options: ["Dix-huit ans", "Vingt ans", "Vingt-deux ans", "Vingt-cinq ans"],
+            answer: 2
+          },
+          {
+            id:   "q2",
+            type: "mcq",
+            text: "Quelle est la ville où habite Sophie ?",
+            options: ["Lyon", "Paris", "Marseille", "Bordeaux"],
+            answer: 1
+          },
+          {
+            id:   "q3",
+            type: "mcq",
+            text: "Combien de langues parle Sophie ?",
+            options: ["Une", "Deux", "Trois", "Quatre"],
+            answer: 2
+          },
+          {
+            id:   "q4",
+            type: "mcq",
+            text: "Qu'est-ce que Sophie fait le week-end ?",
+            options: ["Elle travaille", "Elle étudie", "Elle visite des musées", "Elle voyage à l'étranger"],
+            answer: 2
+          }
+        ]
+      },
+      {
+        type:   "grammar",
+        titleEn: "Section 2: Grammar — Verb Conjugation",
+        titleAr: "القسم الثاني: القواعد — تصريف الأفعال",
+        questions: [
+          {
+            id:   "q5",
+            type: "mcq",
+            text: "Choisissez la bonne forme : Je ___ français.",
+            options: ["parles", "parle", "parlons", "parlez"],
+            answer: 1
+          },
+          {
+            id:   "q6",
+            type: "mcq",
+            text: "Choisissez la bonne forme : Nous ___ à l'université.",
+            options: ["étudie", "étudies", "étudions", "étudient"],
+            answer: 2
+          },
+          {
+            id:   "q7",
+            type: "mcq",
+            text: "Choisissez la bonne forme : Ils ___ à Paris.",
+            options: ["habite", "habites", "habitons", "habitent"],
+            answer: 3
+          },
+          {
+            id:   "q8",
+            type: "mcq",
+            text: "Quel est le contraire de 'grand' ?",
+            options: ["Beau", "Petit", "Vieux", "Nouveau"],
+            answer: 1
+          }
+        ]
+      },
+      {
+        type:   "vocabulary",
+        titleEn: "Section 3: Vocabulary",
+        titleAr: "القسم الثالث: المفردات",
+        questions: [
+          {
+            id:   "q9",
+            type: "mcq",
+            text: "What does 'bonjour' mean?",
+            options: ["Goodbye", "Good morning / Hello", "Thank you", "Please"],
+            answer: 1
+          },
+          {
+            id:   "q10",
+            type: "mcq",
+            text: "What does 'je m'appelle' mean?",
+            options: ["I live", "I study", "My name is", "I like"],
+            answer: 2
+          },
+          {
+            id:   "q11",
+            type: "mcq",
+            text: "What does 'j'aime' mean?",
+            options: ["I have", "I am", "I like / I love", "I go"],
+            answer: 2
+          },
+          {
+            id:   "q12",
+            type: "mcq",
+            text: "Translate 'la semaine' to English:",
+            options: ["The month", "The year", "The day", "The week"],
+            answer: 3
+          }
+        ]
+      }
+    ]
+  }
+  // Add more worksheets here as needed:
+  // "french-a1": { ... }
+  // "english-beginner": { ... }
+};
+
+// ── State ───────────────────────────────────────────────────────────
+let studentName  = "";
+let studentCode  = "";
+let currentSheet = null;
+let shuffledQ    = {};   // questionId → shuffled option indices
+let submitted    = false;
+
+// ── Gate logic ──────────────────────────────────────────────────────
+async function unlockWorksheet() {
+  const phone = document.getElementById("gate-phone").value.trim();
+  const code  = document.getElementById("gate-code").value.trim().toUpperCase();
+  const errEl = document.getElementById("gate-error");
+  const btn   = document.getElementById("btn-unlock");
+
+  errEl.textContent = "";
+  if (!phone) { errEl.textContent = "Please enter your phone number."; return; }
+  if (!code)  { errEl.textContent = "Please enter your access code."; return; }
+
+  btn.disabled = true;
+  btn.textContent = "Checking…";
+
+  try {
+    if (!SCRIPT_URL) throw new Error("Script URL not configured.");
+    const url = `${SCRIPT_URL}?action=validateCode&code=${encodeURIComponent(code)}&phone=${encodeURIComponent(phone)}`;
+    const res  = await fetch(url);
+    const data = await res.json();
+
+    if (!data.valid) {
+      const msgs = {
+        wrong_phone: "This code is registered to a different phone number.",
+        expired:     "This code has expired. Please contact us to renew.",
+        inactive:    "This code has been deactivated. Please contact us.",
+        not_found:   "Code not found. Please check and try again."
+      };
+      errEl.textContent = msgs[data.error] || "Invalid code. Please try again.";
+      btn.disabled = false; btn.textContent = "Unlock Worksheet →";
+      return;
+    }
+
+    studentName = data.name;
+    studentCode = code;
+    const key = (data.course + "-" + data.level).toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+    currentSheet = WORKSHEETS[key] || WORKSHEETS[Object.keys(WORKSHEETS)[0]] || null;
+
+    if (!currentSheet) {
+      errEl.textContent = "Worksheet not yet available for your course. Contact us.";
+      btn.disabled = false; btn.textContent = "Unlock Worksheet →";
+      return;
+    }
+
+    showWorksheet(data);
+  } catch (err) {
+    errEl.textContent = "Connection error. Please try again.";
+    btn.disabled = false; btn.textContent = "Unlock Worksheet →";
+  }
+}
+
+// Enter key on code field
+document.getElementById("gate-code").addEventListener("keydown", e => {
+  if (e.key === "Enter") unlockWorksheet();
+});
+document.getElementById("gate-phone").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("gate-code").focus();
+});
+
+// ── Render worksheet ────────────────────────────────────────────────
+function showWorksheet(data) {
+  document.getElementById("gate-screen").style.display      = "none";
+  document.getElementById("worksheet-screen").style.display = "block";
+
+  document.getElementById("ws-title").textContent         = currentSheet.title;
+  document.getElementById("ws-meta").textContent          = `${data.course} · ${data.level} · Hexagon Centre`;
+  document.getElementById("ws-student-badge").textContent = `👤 ${studentName}`;
+  document.getElementById("ws-unique-id").textContent     = studentCode + " · " + studentName;
+
+  buildWatermark(studentName);
+
+  const body = document.getElementById("ws-body");
+  body.innerHTML = "";
+
+  currentSheet.sections.forEach((sec, si) => {
+    shuffleSection(sec);
+    const secEl = document.createElement("div");
+    secEl.className = "ws-section";
+
+    // Header
+    secEl.innerHTML = `
+      <div class="ws-section-header">
+        <div class="section-num">${si + 1}</div>
+        <h3>${sec.titleEn}</h3>
+      </div>`;
+
+    // Reading paragraph
+    if (sec.paragraph) {
+      const paraDiv = document.createElement("div");
+      paraDiv.className = "para-wrap";
+      paraDiv.innerHTML = `
+        <div class="para-text">${sec.paragraph}</div>
+        <div class="para-owner">© Hexagon Centre — ${studentName} — ${studentCode}</div>`;
+      secEl.appendChild(paraDiv);
+    }
+
+    // Questions
+    const qWrap = document.createElement("div");
+    qWrap.className = "questions-wrap";
+
+    sec.questions.forEach((q, qi) => {
+      const qDiv = document.createElement("div");
+      qDiv.className = "question-block";
+      const qNum = si * 100 + qi + 1;
+
+      if (q.type === "mcq") {
+        const opts = shuffledQ[q.id] || q.options.map((_, i) => i);
+        const optHtml = opts.map((origIdx, dispIdx) => `
+          <label class="option-label" id="opt-${q.id}-${dispIdx}" onclick="selectOption('${q.id}', ${dispIdx}, ${origIdx}, ${q.answer})">
+            <input type="radio" name="${q.id}" value="${origIdx}"/>
+            ${q.options[origIdx]}
+          </label>`).join("");
+
+        qDiv.innerHTML = `
+          <div class="q-text"><span class="q-num">${qNum}.</span>${q.text}</div>
+          <div class="options-grid" id="opts-${q.id}">${optHtml}</div>`;
+      }
+
+      qWrap.appendChild(qDiv);
+    });
+
+    secEl.appendChild(qWrap);
+    body.appendChild(secEl);
+  });
+}
+
+function shuffleSection(sec) {
+  sec.questions.forEach(q => {
+    if (q.type === "mcq") {
+      const indices = q.options.map((_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      shuffledQ[q.id] = indices;
+    }
+  });
+}
+
+// ── Interaction ─────────────────────────────────────────────────────
+const selectedAnswers = {};
+
+function selectOption(qId, dispIdx, origIdx, _correctOrig) {
+  if (submitted) return;
+  selectedAnswers[qId] = origIdx;
+  // Highlight selected
+  const grid = document.getElementById("opts-" + qId);
+  if (!grid) return;
+  grid.querySelectorAll(".option-label").forEach((el, i) => {
+    el.classList.toggle("selected", i === dispIdx);
+  });
+}
+
+function submitAnswers() {
+  if (submitted) return;
+
+  // Count all questions
+  let total = 0, correct = 0;
+  currentSheet.sections.forEach(sec => {
+    sec.questions.forEach(q => {
+      if (q.type !== "mcq") return;
+      total++;
+      const chosen = selectedAnswers[q.id];
+      const isCorrect = chosen === q.answer;
+      if (isCorrect) correct++;
+
+      // Show correct/wrong on every option
+      const opts = shuffledQ[q.id] || q.options.map((_, i) => i);
+      opts.forEach((origIdx, dispIdx) => {
+        const el = document.getElementById(`opt-${q.id}-${dispIdx}`);
+        if (!el) return;
+        el.classList.remove("selected");
+        if (origIdx === q.answer) el.classList.add("correct");
+        else if (origIdx === chosen) el.classList.add("wrong");
+        el.querySelector("input").disabled = true;
+      });
+    });
+  });
+
+  submitted = true;
+  document.getElementById("btn-submit").disabled = true;
+  document.getElementById("btn-submit").textContent = "✓ Submitted";
+
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+  const card = document.getElementById("score-card");
+  card.style.display = "block";
+  document.getElementById("score-pct").textContent   = pct + "%";
+  document.getElementById("score-label").textContent = `${correct} / ${total} correct`;
+  document.getElementById("score-bar").style.width   = pct + "%";
+  document.getElementById("score-sub").textContent   =
+    pct >= 80 ? "Excellent work! 🎉" :
+    pct >= 60 ? "Good effort — review the highlighted answers." :
+                "Keep practising — check the correct answers above.";
+
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// ── Watermark ────────────────────────────────────────────────────────
+function buildWatermark(name) {
+  const overlay = document.getElementById("watermark-overlay");
+  overlay.innerHTML = "";
+  const cols = 4, rows = 6;
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const el = document.createElement("div");
+      el.className = "wm-text";
+      el.textContent = `© HEXAGON  ${name.toUpperCase()}  ${studentCode}`;
+      el.style.left   = (c * 28) + "%";
+      el.style.top    = (r * 18) + "%";
+      el.style.animationDelay = (r * cols + c) * 0.4 + "s";
+      overlay.appendChild(el);
+    }
+  }
+}
+
+// ── Security ─────────────────────────────────────────────────────────
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("keydown", e => {
+  // Block Ctrl+C, Ctrl+A, Ctrl+S, Ctrl+P, Ctrl+U, F12, PrintScreen
+  if (e.ctrlKey && ["c","a","s","p","u"].includes(e.key.toLowerCase())) e.preventDefault();
+  if (e.key === "F12" || e.key === "PrintScreen") e.preventDefault();
+});
+// Detect DevTools (basic)
+setInterval(() => {
+  const before = new Date();
+  // eslint-disable-next-line no-debugger
+  debugger;
+  if (new Date() - before > 100) document.body.innerHTML = "<p style='padding:40px'>Session ended.</p>";
+}, 3000);
+</script>
+
+</body>
+</html>
